@@ -1,10 +1,9 @@
 module NamedNumber (namedNumber) where
 
-import Prelude ((<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
+import Prelude ((==), (<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
 import Math (log, log10e, pow)
 import Data.Int (floor, toNumber, decimal, toStringAs)
 import Data.Number (isFinite)
-import Data.String (null)
 import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
 import Data.Maybe (Maybe(..))
 
@@ -36,39 +35,28 @@ filterNames :: Names -> Int -> Names
 filterNames names x | x > 1 = filter (contains x) names
                     | otherwise = empty 
 
-getName :: Maybe NamedNumber -> String
-getName n = case n of
-    Nothing -> "" 
-    Just {name} -> name
-
-getValue :: Maybe NamedNumber -> Int
-getValue n = case n of
-    Nothing -> 0 
-    Just {value} -> value
+safe :: Maybe NamedNumber -> NamedNumber
+safe n = case n of
+    Nothing -> { name: "", value: 0 } 
+    Just a -> a
 
 result :: Int -> Strings -> Result
 result x ns = { value: x, names: ns }
 
---------------
--- feels wrong
+latest :: Result -> NamedNumber -> Result
+latest old {name, value}
+    | value == 0 = old
+    | otherwise = result (old.value + value) (name: old.names)
+
 find' :: Result -> Names -> Int -> Result
 find' results names x
     | length names > 0 = do
         let
             names' = filterNames names x
-            lNN = last names'
-            name = getName lNN 
-            value = getValue lNN
-            exp = results.value + value
+            biggest = safe $ last names'
 
-            results' = if null name then results else result exp (name : results.names)
-            x' = (-) x $ getValue lNN
-
-        find' results' names' x'
+        find' (latest results biggest) names' (x - biggest.value)
     | otherwise = results
--- /feels wrong
----------------
-
 
 -- starts find' with an empty list
 find :: Names -> Int -> Result
