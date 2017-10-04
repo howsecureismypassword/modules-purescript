@@ -1,4 +1,4 @@
-module Test.Main where
+module Test.NamedNumber where
 
 import Prelude
 import Control.Monad.Eff (Eff)
@@ -7,12 +7,22 @@ import Test.Spec.Assertions (shouldEqual)
 import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (RunnerEffects, run)
 
-import Main(namedNumber')
+-- named number logic
+import NamedNumber (namedNumber)
+
+-- named numbers dictionary
+import NamedNumbers (names)
+
+-- setup namedNumber
+namedNumber' :: Number -> String
+namedNumber' = namedNumber names
 
 main :: Eff (RunnerEffects ()) Unit
 main = run [consoleReporter] do
     describe "namedNumber'" do
        it "names numbers" do
+          namedNumber' 1.0 `shouldEqual` "1"
+          namedNumber' 0.0 `shouldEqual` "0"
           namedNumber' 12.0 `shouldEqual` "12"
           namedNumber' 220.0 `shouldEqual` "2 hundred"
           namedNumber' 3200.0 `shouldEqual` "3 thousand"
