@@ -1,14 +1,19 @@
-module NamedNumber where
+module NamedNumber (namedNumber) where
 
-import Prelude((<<<), (*), (-), (<=), (>), ($), otherwise)
-import Math(log, log10e)
-import Data.Int(floor)
-import Data.String(null)
-import Data.List(List, (:), length, filter, fromFoldable, last)
-import Data.Maybe(Maybe(..))
-import NamedNumbers(NamedNumber, Names)
+import Prelude ((<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
+import Math (log, log10e, pow)
+import Data.Int (floor, toNumber, decimal, toStringAs)
+import Data.String (null)
+import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
+import Data.Maybe (Maybe(..))
+import NamedNumbers (NamedNumber, Names)
 
 type Strings = List String
+
+type Result = {
+    value :: Int,
+    names :: Strings
+}
 
 -- creates an empty list
 empty :: forall a. List a
@@ -39,17 +44,23 @@ getValue n = case n of
     Nothing -> 0 
     Just {value} -> value
 
+result :: Int -> Strings -> Result
+result x ns = { value: x, names: ns }
+
 --------------
 -- feels wrong
-find' :: Strings -> Names -> Int -> Strings
+find' :: Result -> Names -> Int -> Result
 find' results names x
     | length names > 0 = do
         let
             names' = filterNames names x
-            result = last names'
-            name = getName result 
-            results' = if null name then results else name : results
-            x' = (-) x $ getValue result
+            lNN = last names'
+            name = getName lNN 
+            value = getValue lNN
+            exp = results.value + value
+
+            results' = if null name then results else result exp (name : results.names)
+            x' = (-) x $ getValue lNN
 
         find' results' names' x'
     | otherwise = results
@@ -58,9 +69,15 @@ find' results names x
 
 
 -- starts find' with an empty list
-find :: Names -> Int -> Strings
-find = find' empty 
+find :: Names -> Int -> Result
+find = find' (result 0 empty)
+
+join :: String -> String -> String
+join str n = str <> " " <> n
 
 -- gets the exponent of the given number, then uses find
-namedNumber :: Names -> Number -> List String
-namedNumber names x = find names $ exponent x 
+namedNumber :: Names -> Number -> String
+namedNumber names x = do
+    let {value, names} = find names $ exponent x 
+    let val = floor $ x / pow 10.0 (toNumber value)
+    toStringAs decimal val <> foldl join "" names
