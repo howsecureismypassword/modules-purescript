@@ -3,9 +3,11 @@ module NamedNumber (namedNumber) where
 import Prelude ((<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
 import Math (log, log10e, pow)
 import Data.Int (floor, toNumber, decimal, toStringAs)
+import Data.Number (isFinite)
 import Data.String (null)
 import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
 import Data.Maybe (Maybe(..))
+
 import NamedNumbers (NamedNumber, Names)
 
 type Strings = List String
@@ -77,7 +79,9 @@ join str n = str <> " " <> n
 
 -- gets the exponent of the given number, then uses find
 namedNumber :: Names -> Number -> String
-namedNumber names x = do
-    let {value, names} = find names $ exponent x 
-    let val = floor $ x / pow 10.0 (toNumber value)
-    toStringAs decimal val <> foldl join "" names
+namedNumber names x
+    | isFinite x = do
+        let {value, names} = find names $ exponent x 
+            val = floor $ x / pow 10.0 (toNumber value)
+        toStringAs decimal val <> foldl join "" names
+    | otherwise = "Infinity"

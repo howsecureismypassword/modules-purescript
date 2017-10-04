@@ -38,4 +38,4 @@ test = run [consoleReporter] do
           namedNumber' (200.0 * (10.0 `pow` 123.0)) `shouldEqual` "2 hundred quadragintillion"
           namedNumber' (2.0 * (10.0 `pow` 152.0)) `shouldEqual` "2 hundred octillion quadragintillion"
           namedNumber' (10.0 `pow` 308.0) `shouldEqual` "1 hundred uncentillion"
-          -- namedNumber' (100.0 `pow` 308.0) `shouldEqual` "Infinity"
+          namedNumber' (100.0 `pow` 308.0) `shouldEqual` "Infinity"
