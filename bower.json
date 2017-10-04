@@ -12,7 +12,8 @@
     "purescript-lists": "^4.10.0",
     "purescript-numbers": "^5.0.0",
     "purescript-integers": "^3.1.0",
-    "purescript-strings": "^3.3.1"
+    "purescript-strings": "^3.3.1",
+    "purescript-spec": "^2.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^3.0.0"
