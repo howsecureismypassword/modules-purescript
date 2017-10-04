@@ -2,6 +2,7 @@ module Test.NamedNumber where
 
 import Prelude
 import Control.Monad.Eff (Eff)
+import Math (pow)
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Test.Spec.Reporter.Console (consoleReporter)
@@ -17,8 +18,8 @@ import NamedNumbers (names)
 namedNumber' :: Number -> String
 namedNumber' = namedNumber names
 
-main :: Eff (RunnerEffects ()) Unit
-main = run [consoleReporter] do
+test :: Eff (RunnerEffects ()) Unit
+test = run [consoleReporter] do
     describe "namedNumber'" do
        it "names numbers" do
           namedNumber' 1.0 `shouldEqual` "1"
@@ -34,4 +35,7 @@ main = run [consoleReporter] do
           namedNumber' 9200000000.0 `shouldEqual` "9 billion"
           namedNumber' 12000000000.0 `shouldEqual` "12 billion"
           namedNumber' 220000000000.0 `shouldEqual` "2 hundred billion"
-
+          namedNumber' (200.0 * (10.0 `pow` 123.0)) `shouldEqual` "2 hundred quadragintillion"
+          namedNumber' (2.0 * (10.0 `pow` 152.0)) `shouldEqual` "2 hundred octillion quadragintillion"
+          namedNumber' (10.0 `pow` 308.0) `shouldEqual` "1 hundred uncentillion"
+          -- namedNumber' (100.0 `pow` 308.0) `shouldEqual` "Infinity"
