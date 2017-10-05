@@ -17,6 +17,10 @@ import Calculator (calculate)
 namedNumber' :: Number -> String
 namedNumber' = namedNumber names
 
+-- setup calculate
+calculate' :: String -> Number
+calculate' = calculate 26.0
+
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
-  log $ namedNumber' $ calculate 26.0 "hello" 
+  log $ namedNumber' $ calculate' "hello" 
