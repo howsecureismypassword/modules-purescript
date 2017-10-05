@@ -65,11 +65,14 @@ find = find' (result 0 empty)
 join :: String -> String -> String
 join str n = str <> " " <> n
 
+getName :: Names -> Number -> String
+getName names x = do
+    let {value, names} = find names $ exponent x 
+        val = floor $ x / pow 10.0 (toNumber value)
+    toStringAs decimal val <> foldl join "" names
+
 -- gets the exponent of the given number, then uses find
 namedNumber :: Names -> Number -> String
 namedNumber names x
-    | isFinite x = do
-        let {value, names} = find names $ exponent x 
-            val = floor $ x / pow 10.0 (toNumber value)
-        toStringAs decimal val <> foldl join "" names
+    | isFinite x = getName names x
     | otherwise = "Infinity"
