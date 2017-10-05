@@ -2,10 +2,10 @@ module Test.Main where
 
 import Prelude
 import Control.Monad.Eff (Eff)
-import Test.Spec.Runner (RunnerEffects)
+import Node.FS (FS)
+import Test.Spec.Discovery (discover)
+import Test.Spec.Reporter.Console (consoleReporter)
+import Test.Spec.Runner (RunnerEffects, run)
 
-import Test.NamedNumber (test) as NamedNumber
-
-main :: Eff (RunnerEffects ()) Unit
-main = do
-    NamedNumber.test
+main :: Eff (RunnerEffects (fs :: FS)) Unit
+main = discover "Test\\..*" >>= run [consoleReporter]

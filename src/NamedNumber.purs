@@ -43,19 +43,21 @@ safe n = case n of
 result :: Int -> Strings -> Result
 result x ns = { value: x, names: ns }
 
-latest :: Result -> NamedNumber -> Result
-latest old {name, value}
+latest :: Result -> String -> Int -> Result
+latest old name value
     | value == 0 = old
     | otherwise = result (old.value + value) (name: old.names)
 
+findNames :: Result -> Names -> Int -> Result
+findNames results names x = do
+    let names' = filterNames names x
+        {name, value} = safe $ last names'
+
+    find' (latest results name value) names' (x - value)
+
 find' :: Result -> Names -> Int -> Result
 find' results names x
-    | length names > 0 = do
-        let
-            names' = filterNames names x
-            biggest = safe $ last names'
-
-        find' (latest results biggest) names' (x - biggest.value)
+    | length names > 0 = findNames results names x
     | otherwise = results
 
 -- starts find' with an empty list
