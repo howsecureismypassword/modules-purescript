@@ -7,7 +7,7 @@ import Data.Number (isFinite)
 import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
 import Data.Maybe (Maybe(..))
 
-import NamedNumbers (NamedNumber, Names)
+import Dictionary.NamedNumbers (NamedNumber, Names)
 
 type Strings = List String
 

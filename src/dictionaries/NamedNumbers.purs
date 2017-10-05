@@ -1,4 +1,4 @@
-module NamedNumbers where
+module Dictionary.NamedNumbers where
 
 import Data.List(List, fromFoldable)
 

@@ -8,7 +8,7 @@ import Control.Monad.Eff.Console (CONSOLE, log)
 import NamedNumber (namedNumber)
 
 -- named numbers dictionary
-import NamedNumbers (names)
+import Dictionary.NamedNumbers (names)
 
 -- calculation 
 import Calculator (calculate)

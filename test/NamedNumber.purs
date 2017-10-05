@@ -9,7 +9,7 @@ import Test.Spec.Assertions (shouldEqual)
 import NamedNumber (namedNumber)
 
 -- named numbers dictionary
-import NamedNumbers (names)
+import Dictionary.NamedNumbers (names)
 
 -- setup namedNumber
 namedNumber' :: Number -> String
