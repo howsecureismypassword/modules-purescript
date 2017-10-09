@@ -19,3 +19,6 @@ spec = describe "Calculator (calculate)" do
         calculate' "i" `shouldEqual` 26.0 
         calculate' "1" `shouldEqual` 10.0 
         calculate' "hello" `shouldEqual` 11881376.0
+        calculate' "abc123ABC" `shouldEqual` 13537086546263552.0
+
+        calculate' "skdkfkdkfkekfkekfudkfieifidifieifieifiri" `shouldEqual` 3.971311183896361e56

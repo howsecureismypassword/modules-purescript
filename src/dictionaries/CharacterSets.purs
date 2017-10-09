@@ -25,9 +25,8 @@ regex' :: String -> Either String Regex
 regex' s = regex s global
 
 safe :: Either String Regex -> Regex
-safe e = case e of
-    Right a -> a
-    Left a -> safe $ regex' "//"
+safe (Right a) = a
+safe (Left a) = safe $ regex' "//"
 
 parse :: UnparsedCharacterSet -> CharacterSet
 parse { name, test, value } = {

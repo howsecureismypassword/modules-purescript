@@ -1,6 +1,6 @@
 module NamedNumber (namedNumber) where
 
-import Prelude ((==), (<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
+import Prelude ((<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
 import Math (log, log10e, pow)
 import Data.Int (floor, toNumber, decimal, toStringAs)
 import Data.Number (isFinite)
@@ -36,17 +36,15 @@ filterNames names x | x > 1 = filter (contains x) names
                     | otherwise = empty 
 
 safe :: Maybe NamedNumber -> NamedNumber
-safe n = case n of
-    Nothing -> { name: "", value: 0 } 
-    Just a -> a
+safe Nothing = { name: "", value: 0 } 
+safe (Just a) = a
 
 result :: Int -> Strings -> Result
 result x ns = { value: x, names: ns }
 
 latest :: Result -> String -> Int -> Result
-latest old name value
-    | value == 0 = old
-    | otherwise = result (old.value + value) (name: old.names)
+latest previous name 0 = previous
+latest previous name value = result (previous.value + value) (name: previous.names)
 
 findNames :: Result -> Names -> Int -> Result
 findNames results names x = do
@@ -67,13 +65,18 @@ find = find' (result 0 empty)
 join :: String -> String -> String
 join str n = str <> " " <> n
 
+toString :: Int -> String
+toString = toStringAs decimal
+
+significand :: Number -> Int -> Int
+significand value exp = floor $ value / pow 10.0 (toNumber exp)
+
+-- gets the exponent of the given number, then uses find
 getName :: Names -> Number -> String
 getName names x = do
     let {value, names} = find names $ exponent x 
-        val = floor $ x / pow 10.0 (toNumber value)
-    toStringAs decimal val <> foldl join "" names
+    toString (significand x value) <> foldl join "" names
 
--- gets the exponent of the given number, then uses find
 namedNumber :: Names -> Number -> String
 namedNumber names x
     | isFinite x = getName names x
