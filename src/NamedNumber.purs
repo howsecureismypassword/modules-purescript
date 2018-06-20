@@ -7,6 +7,7 @@ import Data.Number (isFinite)
 import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
 import Data.Maybe (Maybe(..))
 
+import Utility (join)
 import Dictionary.NamedNumbers (NamedNumber, Names)
 
 type Strings = List String
@@ -52,9 +53,6 @@ find :: Result -> Names -> Int -> Result
 find results names x
     | length names > 0 = findNames results names x
     | otherwise = results
-
-join :: String -> String -> String
-join str n = str <> " " <> n
 
 toString :: Int -> String
 toString = toStringAs decimal

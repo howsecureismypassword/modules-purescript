@@ -14,12 +14,13 @@ import Data.Maybe (Maybe(..))
 -- tested modules
 import Calculator (calculate)
 import NamedNumber (namedNumber)
-import Period (period)
+import Period (Result, period)
 import Utility (findLast)
 
 -- dictionaries
 import Dictionary.CharacterSets (sets)
 import Dictionary.NamedNumbers (names)
+import Dictionary.Periods (periods)
 
 -- helper functions
 calculate' :: String -> Number
@@ -27,6 +28,9 @@ calculate' = calculate sets
 
 namedNumber' :: Number -> String
 namedNumber' = namedNumber names
+
+period' :: Number -> Number -> Maybe Result
+period' = period periods
 
 -- tests
 main :: Effect Unit
@@ -68,34 +72,34 @@ main = run [consoleReporter] do
 
     describe "Period (periods)" do
         it "works out sub-yoctoseconds" do
-            period (10.0 `pow` 25.0) 1 `shouldEqual` Just { value: 0.0, name: "yoctoseconds" }
+            period' (10.0 `pow` 25.0) 1.0 `shouldEqual` Just { value: 0.0, name: "yoctoseconds" }
 
         it "works out yoctoseconds" do
-            period (10.0 `pow` 24.0) 1 `shouldEqual` Just { value: 1.0, name: "yoctosecond" }
+            period' (10.0 `pow` 24.0) 1.0 `shouldEqual` Just { value: 1.0, name: "yoctosecond" }
 
         it "works out seconds" do
-            period 1.0 1 `shouldEqual` Just { value: 1.0, name: "second" }
+            period' 1.0 1.0 `shouldEqual` Just { value: 1.0, name: "second" }
 
         it "works out minutes" do
-            period 1.0 60 `shouldEqual` Just { value: 1.0, name: "minute" }
+            period' 1.0 60.0 `shouldEqual` Just { value: 1.0, name: "minute" }
 
         it "works out hours" do
-            period 1.0 3600 `shouldEqual` Just { value: 1.0, name: "hour" }
+            period' 1.0 3600.0 `shouldEqual` Just { value: 1.0, name: "hour" }
 
         it "works out years" do
-            period 0.01 315576 `shouldEqual` Just { value: 1.0, name: "year" }
+            period' 0.01 315576.0 `shouldEqual` Just { value: 1.0, name: "year" }
 
         it "works out multiple yoctoseconds" do
-            period (10.0 `pow` 24.0) 7 `shouldEqual` Just { value: 7.0, name: "yoctoseconds" }
+            period' (10.0 `pow` 24.0) 7.0 `shouldEqual` Just { value: 7.0, name: "yoctoseconds" }
 
         it "works out multiple seconds" do
-            period 0.5 1 `shouldEqual` Just { value: 2.0, name: "seconds" }
+            period' 0.5 1.0 `shouldEqual` Just { value: 2.0, name: "seconds" }
 
         it "works out multiple minutes" do
-            period 0.5 60 `shouldEqual` Just { value: 2.0, name: "minutes" }
+            period' 0.5 60.0 `shouldEqual` Just { value: 2.0, name: "minutes" }
 
         it "works out multiple hours" do
-            period 0.5 3600 `shouldEqual` Just { value: 2.0, name: "hours" }
+            period' 0.5 3600.0 `shouldEqual` Just { value: 2.0, name: "hours" }
 
         it "works out multiple years" do
-            period 0.005 315576 `shouldEqual` Just { value: 2.0, name: "years" }
+            period' 0.005 315576.0 `shouldEqual` Just { value: 2.0, name: "years" }

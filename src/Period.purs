@@ -2,8 +2,7 @@ module Period where
 
 import Prelude ((<), (/), (==), (<$>))
 import Data.Maybe (Maybe(..))
-import Data.Int (toNumber)
-import Dictionary.Periods (Period, periods)
+import Dictionary.Periods (Period, Periods)
 import Math (floor)
 import Utility (findLast)
 
@@ -13,18 +12,18 @@ type Result = {
 }
 
 result :: Number -> Period -> Result
-result time period = { value, name }
-    where value = floor (time / period.seconds)
-          name = if value == 1.0 then period.singular else period.plural 
+result time per = { value, name }
+    where value = floor (time / per.seconds)
+          name = if value == 1.0 then per.singular else per.plural
 
 check :: Number -> Period -> Boolean
 check time per = time < per.seconds
 
-find' :: Number -> Maybe Result
-find' time = result time <$> findLast (check time) Nothing periods
+find' :: Periods -> Number -> Maybe Result
+find' periods time = result time <$> findLast (check time) Nothing periods
 
-perSecond :: Number -> Int -> Number
-perSecond cps poss = toNumber poss / cps
+perSecond :: Number -> Number -> Number
+perSecond cps poss = poss / cps
 
-period :: Number -> Int -> Maybe Result
-period calculationsPerSecond possibilities = find' (perSecond calculationsPerSecond possibilities)
+period :: Periods -> Number -> Number -> Maybe Result
+period periods calculationsPerSecond possibilities = find' periods (possibilities / calculationsPerSecond)

@@ -1,6 +1,6 @@
 module Utility where
 
-import Prelude ((&&), (>>=), otherwise, bind)
+import Prelude ((&&), (>>=), (<>), otherwise, bind)
 import Data.List (List, head, tail, null)
 import Data.Maybe (Maybe(..), isJust)
 
@@ -12,3 +12,6 @@ findLast fn prev list = do
             | null xs = Just x
             | otherwise = findLast fn (Just x) xs
     val
+
+join :: String -> String -> String
+join str n = str <> " " <> n
