@@ -1,8 +1,8 @@
 module Main where
 
 import Prelude
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
+import Effect (Effect)
+import Effect.Console (log)
 
 -- named number logic
 import NamedNumber (namedNumber)
@@ -22,6 +22,6 @@ namedNumber' = namedNumber names
 calculate' :: String -> Number
 calculate' = calculate sets 
 
-main :: forall e. Eff (console :: CONSOLE | e) Unit
+main :: Effect Unit
 main = do
   log $ namedNumber' $ calculate' "hello" 
