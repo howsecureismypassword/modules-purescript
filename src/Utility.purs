@@ -1,6 +1,6 @@
 module Utility where
 
-import Prelude ((&&), (>>=), (<>), otherwise, bind)
+import Prelude ((&&),(<>), otherwise, bind)
 import Data.List (List, head, tail, null)
 import Data.Maybe (Maybe(..), isJust)
 
