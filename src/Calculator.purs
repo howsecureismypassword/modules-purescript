@@ -13,7 +13,7 @@ import Data.Either (hush)
 type UnparsedCharacterSet = {
     name :: String,
     matches :: String,
-    value :: Int
+    value :: Number
 }
 
 type CharacterSet = {
@@ -27,11 +27,7 @@ type CharacterSets = List CharacterSet
 parse :: UnparsedCharacterSet -> Maybe CharacterSet
 parse { name, matches, value } = do
     matches' <- hush (regex matches global)
-    pure {
-        name,
-        matches: matches',
-        value: toNumber value
-    }
+    pure { name, matches: matches', value }
 
 check :: String -> Number -> CharacterSet -> Number
 check password acc { matches, value }
@@ -42,5 +38,5 @@ foundIn :: CharacterSets -> String -> Number
 foundIn sets password = foldl (check password) 0.0 sets
 
 calculate :: Array UnparsedCharacterSet -> String -> Number
-calculate sets password = pow (foundIn sets' password) $ toNumber $ length password
-    where sets' = catMaybes $ parse <$> (fromFoldable sets)
+calculate sets password = (foundIn sets' password) `pow` (toNumber $ length password)
+    where sets' = catMaybes $ parse <$> fromFoldable sets
