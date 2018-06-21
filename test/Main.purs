@@ -8,14 +8,13 @@ import Test.Spec.Runner (run)
 import Test.Spec.Assertions (shouldEqual)
 
 import Math (pow)
-import Data.Int (fromNumber)
 import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
 
 -- tested modules
 import Calculator (calculate)
 import NamedNumber (namedNumber)
-import Period (period, Result)
+import Period (period)
 import Utility (findLast)
 
 -- dictionaries
@@ -24,7 +23,7 @@ import Dictionary.NamedNumbers (names)
 
 -- helper functions
 calculate' :: String -> Number
-calculate' = calculate sets 
+calculate' = calculate sets
 
 namedNumber' :: Number -> String
 namedNumber' = namedNumber names
@@ -34,14 +33,14 @@ main :: Effect Unit
 main = run [consoleReporter] do
     describe "Utility (findLast)" do
         it "finds last item" do
-           findLast (\x -> x > 5) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 4 
-           findLast (\x -> x > 9) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 9 
+           findLast (\x -> x > 5) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 4
+           findLast (\x -> x > 9) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 9
            findLast (\x -> x > 10) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 10
 
     describe "Calculator (calculate)" do
         it "calculates" do
-            calculate' "i" `shouldEqual` 26.0 
-            calculate' "1" `shouldEqual` 10.0 
+            calculate' "i" `shouldEqual` 26.0
+            calculate' "1" `shouldEqual` 10.0
             calculate' "hello" `shouldEqual` 11881376.0
             calculate' "abc123ABC" `shouldEqual` 13537086546263552.0
 
