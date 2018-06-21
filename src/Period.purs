@@ -1,10 +1,18 @@
-module Period where
+module Period (Period, Result, period) where
 
 import Prelude ((<), (/), (==), (<$>))
 import Data.Maybe (Maybe(..))
-import Dictionary.Periods (Period, Periods)
+import Data.List (List, fromFoldable)
 import Math (floor)
 import Utility (findLast)
+
+type Period = {
+    singular :: String,
+    plural :: String,
+    seconds :: Number
+}
+
+type Periods = List Period
 
 type Result = {
     value :: Number,
@@ -25,5 +33,5 @@ find' periods time = result time <$> findLast (check time) Nothing periods
 perSecond :: Number -> Number -> Number
 perSecond cps poss = poss / cps
 
-period :: Periods -> Number -> Number -> Maybe Result
-period periods calculationsPerSecond possibilities = find' periods (possibilities / calculationsPerSecond)
+period :: Array Period -> Number -> Number -> Maybe Result
+period periods calculationsPerSecond possibilities = find' (fromFoldable periods) (possibilities / calculationsPerSecond)

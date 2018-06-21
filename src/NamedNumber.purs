@@ -1,4 +1,4 @@
-module NamedNumber (namedNumber) where
+module NamedNumber (NamedNumber, namedNumber) where
 
 import Prelude ((<>), (<<<), (*), (+), (-), (/), (<=), (>), ($), otherwise)
 import Math (log, log10e, pow)
@@ -8,7 +8,13 @@ import Data.List (List, (:), length, filter, fromFoldable, last, foldl)
 import Data.Maybe (Maybe(..))
 
 import Utility (join)
-import Dictionary.NamedNumbers (NamedNumber, Names)
+
+type NamedNumber = {
+    name :: String,
+    value :: Int
+}
+
+type Names = List NamedNumber
 
 type Strings = List String
 
@@ -66,7 +72,7 @@ getName names x = toString (significand x value) <> foldl join "" names
     where initial = { value: 0, names: empty }
           {value, names} = find initial names $ exponent x
 
-namedNumber :: Names -> Number -> String
+namedNumber :: Array NamedNumber -> Number -> String
 namedNumber names x
-    | isFinite x = getName names x
+    | isFinite x = getName (fromFoldable names) x
     | otherwise = "Infinity"

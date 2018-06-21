@@ -12,22 +12,22 @@ import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
 
 -- tested modules
-import Calculator (calculate)
-import NamedNumber (namedNumber)
-import Period (Result, period)
+import Calculator (UnparsedCharacterSet, calculate)
+import NamedNumber (NamedNumber, namedNumber)
+import Period (Period, Result, period)
 import Utility (findLast)
 
 -- dictionaries
-import Dictionary.CharacterSets (sets)
-import Dictionary.NamedNumbers (names)
-import Dictionary.Periods (periods)
+foreign import characterSets :: Array UnparsedCharacterSet
+foreign import namedNumbers :: Array NamedNumber
+foreign import periods :: Array Period
 
 -- helper functions
 calculate' :: String -> Number
-calculate' = calculate sets
+calculate' = calculate characterSets
 
 namedNumber' :: Number -> String
-namedNumber' = namedNumber names
+namedNumber' = namedNumber namedNumbers
 
 period' :: Number -> Number -> Maybe Result
 period' = period periods

@@ -1,0 +1,77 @@
+[
+  {
+    "singular": "yoctosecond",
+    "plural": "yoctoseconds",
+    "seconds": 1e-24
+  },
+  {
+    "singular": "zeptosecond",
+    "plural": "zeptoseconds",
+    "seconds": 1e-21
+  },
+  {
+    "singular": "attosecond",
+    "plural": "attoseconds",
+    "seconds": 1e-18
+  },
+  {
+    "singular": "femtosecond",
+    "plural": "femtoseconds",
+    "seconds": 1e-15
+  },
+  {
+    "singular": "picosecond",
+    "plural": "picoseconds",
+    "seconds": 1e-12
+  },
+  {
+    "singular": "nanosecond",
+    "plural": "nanoseconds",
+    "seconds": 1e-9
+  },
+  {
+    "singular": "microsecond",
+    "plural": "microseconds",
+    "seconds": 0.000001
+  },
+  {
+    "singular": "millisecond",
+    "plural": "milliseconds",
+    "seconds": 0.001
+  },
+  {
+    "singular": "second",
+    "plural": "seconds",
+    "seconds": 1
+  },
+  {
+    "singular": "minute",
+    "plural": "minutes",
+    "seconds": 60
+  },
+  {
+    "singular": "hour",
+    "plural": "hours",
+    "seconds": 3600
+  },
+  {
+    "singular": "day",
+    "plural": "days",
+    "seconds": 86400
+  },
+  {
+    "singular": "week",
+    "plural": "weeks",
+    "seconds": 604800
+  },
+  {
+    "singular": "month",
+    "plural": "months",
+    "seconds": 2626560
+  },
+  {
+    "singular": "year",
+    "plural": "years",
+    "seconds": 31557600
+  }
+]
