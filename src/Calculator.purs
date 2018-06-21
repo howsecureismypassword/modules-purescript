@@ -1,13 +1,14 @@
 module Calculator (UnparsedCharacterSet, calculate) where
 
-import Prelude (($), (+), otherwise, map)
+import Prelude (($), (+), (<$>), otherwise, bind, pure)
 import Math (pow)
 import Data.Int(toNumber)
-import Data.List (List, fromFoldable, foldl)
+import Data.List (List, fromFoldable, foldl, catMaybes)
 import Data.String (length)
 import Data.String.Regex (Regex, regex, test)
 import Data.String.Regex.Flags (global)
-import Data.Either (Either(..))
+import Data.Maybe (Maybe)
+import Data.Either (hush)
 
 type UnparsedCharacterSet = {
     name :: String,
@@ -23,19 +24,14 @@ type CharacterSet = {
 
 type CharacterSets = List CharacterSet
 
-regex' :: String -> Either String Regex
-regex' s = regex s global
-
-safe :: Either String Regex -> Regex
-safe (Right a) = a
-safe (Left a) = safe $ regex' "//"
-
-parse :: UnparsedCharacterSet -> CharacterSet
-parse { name, matches, value } = {
-    name: name,
-    matches: safe $ regex' matches,
-    value: toNumber value
-}
+parse :: UnparsedCharacterSet -> Maybe CharacterSet
+parse { name, matches, value } = do
+    matches' <- hush (regex matches global)
+    pure {
+        name,
+        matches: matches',
+        value: toNumber value
+    }
 
 check :: String -> Number -> CharacterSet -> Number
 check password acc { matches, value }
@@ -47,4 +43,4 @@ foundIn sets password = foldl (check password) 0.0 sets
 
 calculate :: Array UnparsedCharacterSet -> String -> Number
 calculate sets password = pow (foundIn sets' password) $ toNumber $ length password
-    where sets' = map parse (fromFoldable sets)
+    where sets' = catMaybes $ parse <$> (fromFoldable sets)
