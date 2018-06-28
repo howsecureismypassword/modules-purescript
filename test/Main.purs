@@ -15,12 +15,23 @@ import Data.Maybe (Maybe(..))
 import Calculator (UnparsedCharacterSet, calculate)
 import NamedNumber (NamedNumber, namedNumber)
 import Period (Period, Result, period)
+import Checker (check)
+import Check (Results, Level(..))
 import Utility (findLast)
+
+import Checks.Dictionary as Dictionary
 
 -- dictionaries
 foreign import characterSets :: Array UnparsedCharacterSet
 foreign import namedNumbers :: Array NamedNumber
 foreign import periods :: Array Period
+foreign import top10 :: Array String
+
+check' :: String -> Results
+check' = check (fromFoldable [
+    Dictionary.check top10 "top10"
+])
+
 
 -- helper functions
 calculate' :: String -> Number
@@ -40,6 +51,19 @@ main = run [consoleReporter] do
            findLast (\x -> x > 5) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 4
            findLast (\x -> x > 9) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 9
            findLast (\x -> x > 10) Nothing (fromFoldable [1, 2, 3, 4, 9, 10]) `shouldEqual` Just 10
+
+    describe "Checks (checks)" do
+        it "checks" do
+            check' "password" `shouldEqual` fromFoldable [Just {
+                id: "top10",
+                level: Insecure,
+                value: Just "1"
+            }]
+            check' "qwerty" `shouldEqual` fromFoldable [Just {
+                id: "top10",
+                level: Insecure,
+                value: Just "5"
+            }]
 
     describe "Calculator (calculate)" do
         it "calculates" do
