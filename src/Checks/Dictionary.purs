@@ -4,7 +4,7 @@ import Prelude ((<$>), (+), show)
 import Data.List (elemIndex, fromFoldable)
 import Data.Maybe (Maybe(Just))
 
-import Check (Check, Result, Level(Insecure))
+import Checker (Check, Result, Level(Insecure))
 
 result :: String -> Int -> Result
 result id index = {

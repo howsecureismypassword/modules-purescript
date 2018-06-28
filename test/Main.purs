@@ -15,8 +15,7 @@ import Data.Maybe (Maybe(..))
 import Calculator (UnparsedCharacterSet, calculate)
 import NamedNumber (NamedNumber, namedNumber)
 import Period (Period, Result, period)
-import Checker (check)
-import Check (Results, Level(..))
+import Checker (Results, Level(..), check)
 import Utility (findLast)
 
 import Checks.Dictionary as Dictionary
