@@ -25,6 +25,6 @@ type Result = {
   , value :: Maybe String
 }
 
-type Results = List (Maybe Result)
+type Results = List Result
 
 type Check = String -> Maybe Result

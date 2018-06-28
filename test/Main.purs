@@ -54,12 +54,12 @@ main = run [consoleReporter] do
 
     describe "Checks (checks)" do
         it "checks" do
-            check' "password" `shouldEqual` fromFoldable [Just {
+            check' "password" `shouldEqual` fromFoldable [{
                 id: "top10",
                 level: Insecure,
                 value: Just "1"
             }]
-            check' "qwerty" `shouldEqual` fromFoldable [Just {
+            check' "qwerty" `shouldEqual` fromFoldable [{
                 id: "top10",
                 level: Insecure,
                 value: Just "5"
