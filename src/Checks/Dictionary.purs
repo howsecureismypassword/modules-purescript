@@ -6,12 +6,12 @@ import Data.Maybe (Maybe(Just))
 
 import Checker (Check, Result, Level(Insecure))
 
-result :: String -> Int -> Result
-result id index = {
-    id: id
+result :: Int -> Result
+result index = {
+    id: "common"
   , level: Insecure
   , value: Just (show (index + 1))
 }
 
-check :: Array String -> String -> Check
-check dictionary id password = result id <$> elemIndex password (fromFoldable dictionary)
+check :: Array String -> Check
+check dictionary password = result <$> elemIndex password (fromFoldable dictionary)

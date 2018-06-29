@@ -25,10 +25,16 @@ foreign import characterSets :: Array UnparsedCharacterSet
 foreign import namedNumbers :: Array NamedNumber
 foreign import periods :: Array Period
 foreign import top10 :: Array String
+foreign import top10k :: Array String
 
 check' :: String -> Results
 check' = check (fromFoldable [
-    Dictionary.check top10 "top10"
+    Dictionary.check top10
+])
+
+check10k :: String -> Results
+check10k = check (fromFoldable [
+    Dictionary.check top10k
 ])
 
 
@@ -54,14 +60,19 @@ main = run [consoleReporter] do
     describe "Checks (checks)" do
         it "checks" do
             check' "password" `shouldEqual` fromFoldable [{
-                id: "top10",
+                id: "common",
                 level: Insecure,
                 value: Just "1"
             }]
             check' "qwerty" `shouldEqual` fromFoldable [{
-                id: "top10",
+                id: "common",
                 level: Insecure,
                 value: Just "5"
+            }]
+            check10k "gocats" `shouldEqual` fromFoldable [{
+                id: "common",
+                level: Insecure,
+                value: Just "9918"
             }]
 
     describe "Calculator (calculate)" do
