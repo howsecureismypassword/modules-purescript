@@ -19,6 +19,7 @@ import Checker (Results, Level(..), check)
 import Utility (findLast)
 
 import Checks.Dictionary as Dictionary
+import Checks.Pattern as Pattern
 
 -- dictionaries
 foreign import characterSets :: Array UnparsedCharacterSet
@@ -30,6 +31,7 @@ foreign import top10k :: Array String
 check' :: String -> Results
 check' = check (fromFoldable [
     Dictionary.check top10
+  , Pattern.check "length.short" Warning "^.{7,9}$"
 ])
 
 check10k :: String -> Results
@@ -63,6 +65,10 @@ main = run [consoleReporter] do
                 id: "common",
                 level: Insecure,
                 value: Just "1"
+            }, {
+                id: "length.short",
+                level: Warning,
+                value: Nothing
             }]
             check' "qwerty" `shouldEqual` fromFoldable [{
                 id: "common",
@@ -73,6 +79,11 @@ main = run [consoleReporter] do
                 id: "common",
                 level: Insecure,
                 value: Just "9918"
+            }]
+            check' "abcd1234" `shouldEqual` fromFoldable [{
+                id: "length.short",
+                level: Warning,
+                value: Nothing
             }]
 
     describe "Calculator (calculate)" do
