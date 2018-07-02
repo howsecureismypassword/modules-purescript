@@ -1,8 +1,9 @@
 {
   "name": "purescript-modules",
-  "set": "psc-0.12.0",
+  "set": "psc-0.12.0-20180628",
   "source": "https://github.com/purescript/package-sets.git",
   "depends": [
+    "bigints",
     "foldable-traversable",
     "prelude",
     "console",

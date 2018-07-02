@@ -1,9 +1,9 @@
 module Period (Period, Result, period) where
 
-import Prelude ((<), (/), (==), (<$>))
+import Prelude ((/), (<), (==), (<$>), (>>=), bind)
 import Data.Maybe (Maybe(..))
-import Data.List (List, fromFoldable)
-import Math (floor)
+import Data.List (List, fromFoldable, last)
+import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
 
 type Period = {
@@ -15,23 +15,37 @@ type Period = {
 type Periods = List Period
 
 type Result = {
-    value :: Number,
+    value :: BigInt,
     name :: String
 }
 
-result :: Number -> Period -> Result
-result time per = { value, name }
-    where value = floor (time / per.seconds)
-          name = if value == 1.0 then per.singular else per.plural
+result :: Maybe BigInt -> Period -> Maybe Result
+result val per = do
+    value <- val
+    let name = if value == (fromInt 1) then per.singular else per.plural
+    Just { value, name }
+
+bigPeriod :: BigInt -> Period -> Maybe Result
+bigPeriod time per = result ((time `quot` _) <$> fromNumber per.seconds) per
+
+smallPeriod :: Number -> Period -> Maybe Result
+smallPeriod time per = result (fromNumber (time / per.seconds)) per
 
 check :: Number -> Period -> Boolean
 check time per = time < per.seconds
 
 find' :: Periods -> Number -> Maybe Result
-find' periods time = result time <$> findLast (check time) Nothing periods
+find' periods time = findLast (check time) Nothing periods >>= smallPeriod time
 
-perSecond :: Number -> Number -> Number
-perSecond cps poss = poss / cps
+period :: Array Period -> Number -> BigInt -> Maybe Result
+period periods calculationsPerSecond possibilities = do
+    let periods' = fromFoldable periods
 
-period :: Array Period -> Number -> Number -> Maybe Result
-period periods calculationsPerSecond possibilities = find' (fromFoldable periods) (possibilities / calculationsPerSecond)
+    lst <- last periods'
+    calcs <- fromNumber calculationsPerSecond
+
+    let time = toNumber possibilities / calculationsPerSecond
+
+    if lst.seconds < time
+        then bigPeriod (possibilities `quot` calcs) lst
+        else find' periods' time
