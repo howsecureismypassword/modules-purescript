@@ -1,0 +1,79 @@
+[
+    {
+        "level": "EasterEgg",
+        "id": "xkcd",
+        "regex": "^correcthorsebatterystaple$"
+    },
+
+    {
+        "level": "EasterEgg",
+        "id": "jeff",
+        "regex": "^jeff|geoff$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "length.very-short",
+        "regex": "^.{1,6}$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "possibly-word",
+        "regex": "^[a-zA-Z]{1,16}$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "only-numbers",
+        "regex": "^[0-9]+$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "just.alphanumeric",
+        "regex": "^([a-zA-Z]+[0-9]+|[0-9]+[a-zA-Z]+)$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "length.short",
+        "regex": "^.{7,9}$"
+    },
+
+    {
+        "level": "Notice",
+        "id": "just.letters",
+        "regex": "^[A-Za-z]+$"
+    },
+
+    {
+        "level": "Notice",
+        "id": "no.symbols",
+        "regex": "^(?:\\d+[a-zA-Z]|[a-zA-Z]+\\d)[a-zA-Z\\d]*$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "just.telephone",
+        "regex": "^[\\-\\(\\)\\.\\/\\s0-9]+$"
+    },
+
+    {
+        "level": "Warning",
+        "id": "repeated-pattern",
+        "regex": "(.+)\\1{2,}"
+    },
+
+    {
+        "level": "Achievement",
+        "id": "non-standard-characters",
+        "regex": "[^A-Za-z0-9\\u0000-\\u007E]"
+    },
+
+    {
+        "level": "Achievement",
+        "id": "length.long",
+        "regex": "^.{17,}$"
+    }
+]

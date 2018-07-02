@@ -20,6 +20,7 @@ import Utility (findLast)
 
 import Checks.Dictionary as Dictionary
 import Checks.Pattern as Pattern
+import Checks.Patterns as Patterns
 
 -- dictionaries
 foreign import characterSets :: Array UnparsedCharacterSet
@@ -27,6 +28,7 @@ foreign import namedNumbers :: Array NamedNumber
 foreign import periods :: Array Period
 foreign import top10 :: Array String
 foreign import top10k :: Array String
+foreign import patterns :: Array Patterns.Pattern
 
 check' :: String -> Results
 check' = check (fromFoldable [
@@ -38,6 +40,9 @@ check10k :: String -> Results
 check10k = check (fromFoldable [
     Dictionary.check top10k
 ])
+
+patternsCheck :: String -> Results
+patternsCheck = check (Patterns.patterns patterns)
 
 
 -- helper functions
@@ -83,6 +88,32 @@ main = run [consoleReporter] do
             check' "abcd1234" `shouldEqual` fromFoldable [{
                 id: "length.short",
                 level: Warning,
+                value: Nothing
+            }]
+            patternsCheck "abcd1234" `shouldEqual` fromFoldable [{
+                id: "just.alphanumeric",
+                level: Warning,
+                value: Nothing
+            }, {
+                id: "length.short",
+                level: Warning,
+                value: Nothing
+            }, {
+                id: "no.symbols",
+                level: Notice,
+                value: Nothing
+            }]
+            patternsCheck "correcthorsebatterystaple" `shouldEqual` fromFoldable [{
+                id: "xkcd",
+                level: EasterEgg,
+                value: Nothing
+            }, {
+                id: "just.letters",
+                level: Notice,
+                value: Nothing
+            }, {
+                id: "length.long",
+                level: Achievement,
                 value: Nothing
             }]
 

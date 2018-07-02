@@ -1,5 +1,6 @@
 module Checker (
     check
+  , read
   , Check
   , Result
   , Results
@@ -8,9 +9,9 @@ module Checker (
 
 import Prelude (($), (<$>), class Show, class Eq)
 import Data.List (List, catMaybes)
-import Data.Maybe (Maybe)
+import Data.Maybe (Maybe(..))
 
-data Level = Highlight | Insecure | Warning | Achievement | Notice
+data Level = Highlight | Insecure | Warning | Achievement | Notice | EasterEgg
 derive instance eqLevel :: Eq Level
 
 instance showLevel :: Show Level where
@@ -19,6 +20,16 @@ instance showLevel :: Show Level where
     show Warning = "Warning"
     show Achievement = "Achievement"
     show Notice = "Notice"
+    show EasterEgg = "EasterEgg"
+
+read :: String -> Maybe Level
+read "Highlight" = Just Highlight
+read "Insecure" = Just Insecure
+read "Warning" = Just Warning
+read "Achievement" = Just Achievement
+read "Notice" = Just Notice
+read "EasterEgg" = Just EasterEgg
+read _ = Nothing
 
 type Result = {
     id :: String
