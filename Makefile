@@ -10,4 +10,4 @@ build.js: output/Calculator/index.js output/Checker/index.js output/Main/index.j
 	echo "module.exports = PS.Main.setup" >> build.js
 
 build.min.js: build.js
-	uglifyjs -m -- build.js > build.min.js
+	uglifyjs -m -c -- build.js > build.min.js
