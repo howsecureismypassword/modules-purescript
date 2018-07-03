@@ -1,10 +1,7 @@
 ## Refactor
 
 - Remove Maybes from findLast?
-    > Use NonEmpty for lists?
-- Tidy up reduce in NamedNumber
-    * [ ] Shouldn't hard-code 2
-    * [ ] Tidy up code generally
+    > Use NonEmpty for lists
 
 ## Bugs
 
@@ -17,6 +14,7 @@
 
 ## Doing
 
+- Use NonEmpty lists to throw errors/avoid maybes
 
 ## Done
 
@@ -27,3 +25,6 @@
 - Add checks module
     * [x] Add to Main
 - Shouldn't convert things into lists every run - need to cache passed in lists
+- Tidy up reduce in NamedNumber
+    * [x] Shouldn't hard-code 2
+    * [x] Tidy up code generally
