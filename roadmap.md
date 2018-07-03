@@ -17,8 +17,6 @@
 
 ## Doing
 
-- Add checks module
-    * [ ] Add to Main
 
 ## Done
 
@@ -26,3 +24,5 @@
 - Inject Periods dictionary into Periods module
 - Remove safe from CharacterSet parsing
 - Use BigInt for Periods
+- Add checks module
+    * [x] Add to Main
