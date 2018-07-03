@@ -2,7 +2,7 @@ module Period (Period, Result, period) where
 
 import Prelude ((/), (<), (==), (<$>), (>>=), bind)
 import Data.Maybe (Maybe(..))
-import Data.List (List, fromFoldable, last)
+import Data.List (List, last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
 
