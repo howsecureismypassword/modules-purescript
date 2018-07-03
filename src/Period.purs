@@ -7,16 +7,16 @@ import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
 
 type Period = {
-    singular :: String,
-    plural :: String,
-    seconds :: Number
+    singular :: String
+  , plural :: String
+  , seconds :: Number
 }
 
 type Periods = List Period
 
 type Result = {
-    value :: BigInt,
-    name :: String
+    value :: BigInt
+  , name :: String
 }
 
 result :: Maybe BigInt -> Period -> Maybe Result

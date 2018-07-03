@@ -47,21 +47,25 @@ checks = describe "Checks (checks)" do
             level: Warning,
             value: Nothing
         }]
+
         check' "qwerty" `shouldEqual` fromFoldable [{
             id: "common",
             level: Insecure,
             value: Just "5"
         }]
+
         check10k "gocats" `shouldEqual` fromFoldable [{
             id: "common",
             level: Insecure,
             value: Just "9918"
         }]
+
         check' "abcd1234" `shouldEqual` fromFoldable [{
             id: "length.short",
             level: Warning,
             value: Nothing
         }]
+
         patternsCheck "abcd1234" `shouldEqual` fromFoldable [{
             id: "just.alphanumeric",
             level: Warning,
@@ -75,6 +79,7 @@ checks = describe "Checks (checks)" do
             level: Notice,
             value: Nothing
         }]
+
         patternsCheck "correcthorsebatterystaple" `shouldEqual` fromFoldable [{
             id: "xkcd",
             level: EasterEgg,

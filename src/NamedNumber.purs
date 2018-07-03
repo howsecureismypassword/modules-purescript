@@ -9,8 +9,8 @@ import Data.Maybe(Maybe(..))
 import Utility (findLast)
 
 type NamedNumber = {
-    name :: String,
-    value :: Int
+    name :: String
+  , value :: Int
 }
 
 type Names = List NamedNumber
@@ -18,8 +18,8 @@ type Names = List NamedNumber
 type Strings = List String
 
 type Result = {
-    value :: Int,
-    names :: Strings
+    value :: Int
+  , names :: Strings
 }
 
 reduce :: Names -> String -> String -> String

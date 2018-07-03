@@ -49,8 +49,8 @@ main { calcs, periods, namedNumbers, characterSets, checks } password =
 setup :: UnparsedConfig -> (String -> Response)
 setup { calcs, periods, namedNumbers, characterSets, dictionary, patterns } =
     main {
-        calcs,
-        periods: fromFoldable periods
+        calcs
+      , periods: fromFoldable periods
       , namedNumbers: fromFoldable namedNumbers
       , characterSets: parseArray characterSets
       , checks: (Dictionary.check (fromFoldable dictionary) : Patterns.patterns (fromFoldable patterns))

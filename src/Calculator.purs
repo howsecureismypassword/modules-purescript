@@ -15,15 +15,15 @@ import Data.Maybe (Maybe)
 import Data.Either (hush)
 
 type UnparsedCharacterSet = {
-    name :: String,
-    matches :: String,
-    value :: Int
+    name :: String
+  , matches :: String
+  , value :: Int
 }
 
 type CharacterSet = {
-    name :: String,
-    matches :: Regex,
-    value :: Int
+    name :: String
+  , matches :: Regex
+  , value :: Int
 }
 
 type CharacterSets = List CharacterSet
