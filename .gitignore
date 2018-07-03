@@ -7,5 +7,3 @@
 /.psc*
 /.purs*
 /.psa*
-build.js
-build.min.js
