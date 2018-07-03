@@ -21,17 +21,17 @@ foreign import patterns :: Array Patterns.Pattern
 
 check' :: String -> Results
 check' = check (fromFoldable [
-    Dictionary.check top10
+    Dictionary.check (fromFoldable top10)
   , Pattern.check "length.short" Warning "^.{7,9}$"
 ])
 
 check10k :: String -> Results
 check10k = check (fromFoldable [
-    Dictionary.check top10k
+    Dictionary.check (fromFoldable top10k)
 ])
 
 patternsCheck :: String -> Results
-patternsCheck = check (Patterns.patterns patterns)
+patternsCheck = check (Patterns.patterns (fromFoldable patterns))
 
 
 -- tests

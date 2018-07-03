@@ -1,7 +1,7 @@
 module Checks.Dictionary where
 
 import Prelude ((<$>), (+), show)
-import Data.List (elemIndex, fromFoldable)
+import Data.List (List, elemIndex)
 import Data.Maybe (Maybe(Just))
 
 import Checker (Check, Result, Level(Insecure))
@@ -13,5 +13,5 @@ result index = {
   , value: Just (show (index + 1))
 }
 
-check :: Array String -> Check
-check dictionary password = result <$> elemIndex password (fromFoldable dictionary)
+check :: List String -> Check
+check dictionary password = result <$> elemIndex password dictionary

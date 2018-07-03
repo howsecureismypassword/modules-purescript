@@ -5,6 +5,7 @@ import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Math (pow)
+import Data.List (fromFoldable)
 import Data.Maybe (Maybe(..))
 import Data.BigInt (BigInt, fromInt)
 
@@ -16,7 +17,7 @@ foreign import periods :: Array Period
 
 -- helper functions
 period' :: Number -> BigInt -> Maybe Result
-period' = period periods
+period' = period (fromFoldable periods)
 
 -- tests
 checks :: Spec Unit

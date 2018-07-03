@@ -1,6 +1,6 @@
-const main = require("./output/Main").main;
+const setup = require("./output/Main").setup;
 
-console.log(main({
+console.log(setup({
     calcs: 40e9,
     periods: require("./dictionaries/periods"),
     namedNumbers: require("./dictionaries/named-numbers"),

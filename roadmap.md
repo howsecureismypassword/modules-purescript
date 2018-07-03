@@ -1,10 +1,10 @@
 ## Refactor
 
-- findLast can't ever return Nothing, so should use different method to keep track of progress
+- Remove Maybes from findLast?
+    > Use NonEmpty for lists?
 - Tidy up reduce in NamedNumber
     * [ ] Shouldn't hard-code 2
     * [ ] Tidy up code generally
-- Shouldn't convert things into lists every run - need to cache passed in lists
 
 ## Bugs
 
@@ -26,3 +26,4 @@
 - Use BigInt for Periods
 - Add checks module
     * [x] Add to Main
+- Shouldn't convert things into lists every run - need to cache passed in lists

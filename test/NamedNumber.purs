@@ -5,6 +5,7 @@ import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Data.BigInt (BigInt, fromInt, pow)
+import Data.List (fromFoldable)
 
 -- tested modules
 import NamedNumber (NamedNumber, namedNumber)
@@ -14,7 +15,7 @@ foreign import namedNumbers :: Array NamedNumber
 
 -- helper functions
 namedNumber' :: BigInt -> String
-namedNumber' = namedNumber namedNumbers
+namedNumber' = namedNumber (fromFoldable namedNumbers)
 
 -- tests
 checks :: Spec Unit

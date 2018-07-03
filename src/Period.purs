@@ -37,15 +37,13 @@ check time per = time < per.seconds
 find' :: Periods -> Number -> Maybe Result
 find' periods time = findLast (check time) Nothing periods >>= smallPeriod time
 
-period :: Array Period -> Number -> BigInt -> Maybe Result
+period :: List Period -> Number -> BigInt -> Maybe Result
 period periods calculationsPerSecond possibilities = do
-    let periods' = fromFoldable periods
-
-    lst <- last periods'
+    lst <- last periods
     calcs <- fromNumber calculationsPerSecond
 
     let time = toNumber possibilities / calculationsPerSecond
 
     if lst.seconds < time
         then bigPeriod (possibilities `quot` calcs) lst
-        else find' periods' time
+        else find' periods time

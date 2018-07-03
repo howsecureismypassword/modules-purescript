@@ -8,14 +8,14 @@ import Data.Maybe (fromMaybe)
 import Data.BigInt (BigInt, fromInt, fromNumber, fromString)
 
 -- tested modules
-import Calculator (UnparsedCharacterSet, calculate)
+import Calculator (UnparsedCharacterSet, calculate, parseArray)
 
 -- dictionaries
 foreign import characterSets :: Array UnparsedCharacterSet
 
 -- helper functions
 calculate' :: String -> BigInt
-calculate' = calculate characterSets
+calculate' = calculate (parseArray characterSets)
 
 -- tests
 checks :: Spec Unit

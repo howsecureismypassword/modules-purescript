@@ -1,4 +1,9 @@
-module Calculator (UnparsedCharacterSet, calculate) where
+module Calculator (
+    UnparsedCharacterSet
+  , CharacterSet
+  , calculate
+  , parseArray
+) where
 
 import Prelude (($), (+), (<$>), otherwise, bind, pure)
 import Data.BigInt (BigInt, fromInt, pow)
@@ -36,6 +41,8 @@ check password acc { matches, value }
 foundIn :: CharacterSets -> String -> Int
 foundIn sets password = foldl (check password) 0 sets
 
-calculate :: Array UnparsedCharacterSet -> String -> BigInt
-calculate sets password = (fromInt $ foundIn sets' password) `pow` (fromInt $ length password)
-    where sets' = catMaybes $ parse <$> fromFoldable sets
+calculate :: List CharacterSet -> String -> BigInt
+calculate sets password = (fromInt $ foundIn sets password) `pow` (fromInt $ length password)
+
+parseArray :: Array UnparsedCharacterSet -> List CharacterSet
+parseArray sets = catMaybes $ parse <$> fromFoldable sets

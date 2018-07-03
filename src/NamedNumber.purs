@@ -32,5 +32,5 @@ reduce names number acc
             in reduce names before ( " " <> name <> acc)
 
 
-namedNumber :: Array NamedNumber -> BigInt -> String
-namedNumber names value = reduce (fromFoldable names) (toString value) ""
+namedNumber :: List NamedNumber -> BigInt -> String
+namedNumber names value = reduce names (toString value) ""
