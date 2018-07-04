@@ -4,6 +4,7 @@ module Main (
 
 import Prelude (($), (>>=), bind, pure)
 import Data.Maybe (Maybe(..))
+import Data.Either (Either(..), note)
 import Data.List.NonEmpty (cons, fromFoldable)
 import Data.Array as Array
 
@@ -14,6 +15,8 @@ import Checker (Checks, Result, check)
 import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 import Utility (join)
+
+foreign import unsafeThrow :: String -> (String -> Response)
 
 type UnparsedConfig = {
     calcs :: Number
@@ -45,18 +48,21 @@ main { calcs, periods, namedNumbers, characterSets, checks } password =
               Nothing -> "Something's gone wrong"
               Just { value, name } -> join (namedNumber namedNumbers value) name
 
+setup :: UnparsedConfig -> (String -> Response)
+setup config = case parseConfig config of
+     Left error -> unsafeThrow error
+     Right main' -> main'
 
-setup :: UnparsedConfig -> Maybe (String -> Response)
-setup { calcs, periods, namedNumbers, characterSets, dictionary, patterns } = do
-
+parseConfig :: UnparsedConfig -> Either String (String -> Response)
+parseConfig { calcs, periods, namedNumbers, characterSets, dictionary, patterns } = do
     -- dictionaries
-    periods' <- fromFoldable periods
-    namedNumbers' <- fromFoldable namedNumbers
-    characterSets' <- parseArray characterSets
+    periods' <- note "Invalid periods dictionary" (fromFoldable periods)
+    namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable namedNumbers)
+    characterSets' <- note "Invalid character sets dictionary" (parseArray characterSets)
 
     -- checks
-    dictionary' <- fromFoldable dictionary
-    patterns' <- fromFoldable patterns >>= Patterns.patterns
+    dictionary' <- note "Invalid password dictionary" (fromFoldable dictionary)
+    patterns' <- note "Invalid patterns dictionary" (fromFoldable patterns >>= Patterns.patterns)
 
     pure $ main {
         calcs

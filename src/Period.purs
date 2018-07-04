@@ -6,7 +6,7 @@ module Period (
 ) where
 
 import Prelude ((/), (<), (==), (<$>), bind)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.List.NonEmpty (NonEmptyList, last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
