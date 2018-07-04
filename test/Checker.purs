@@ -11,10 +11,9 @@ import Data.List.NonEmpty (fromFoldable)
 import Test.Helper (unsafeFromMaybe)
 
 -- tested modules
-import Checker.Internal (CheckResults, MessageInput, Level(..), checkResults, parseMessages)
+import Checker.Internal (CheckResults, MessageInput, Level(..), checkResults)
 
 import Checker.Checks.Dictionary as Dictionary
-import Checker.Checks.Pattern as Pattern
 import Checker.Checks.Patterns as Patterns
 
 -- dictionaries
@@ -28,7 +27,7 @@ check' = checkResults checks'
     where dictionary = unsafeFromMaybe (fromFoldable top10)
           checks' = unsafeFromMaybe (fromFoldable [
                   Dictionary.checkDictionary dictionary
-                , Pattern.checkPattern "length.short" Warning "^.{7,9}$"
+                , Patterns.checkPattern "length.short" Warning "^.{7,9}$"
               ])
 
 check10k :: String -> CheckResults
