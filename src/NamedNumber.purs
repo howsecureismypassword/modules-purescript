@@ -4,11 +4,10 @@ module NamedNumber (
   , namedNumber
 ) where
 
-import Prelude ((<>), (<), (-), otherwise)
+import Prelude ((<>), (<), (-))
 import Data.String (length, splitAt)
 import Data.BigInt (BigInt, toString)
 import Data.List.NonEmpty (NonEmptyList, head)
-import Data.Maybe(Maybe(..))
 
 import Utility (findLast)
 
@@ -26,24 +25,15 @@ type Result = {
   , names :: Strings
 }
 
-next :: Names -> String -> String -> String
-next names number acc =
-    case findLast check Nothing names of
-        Just { name, value } ->
-            let { before } = splitAt (len - value) number
-            in reduce names before (" " <> name <> acc)
-        Nothing -> number <> acc
+reduce :: Names -> String -> String -> String
+reduce names number acc =
+    if len - 1 < (head names).value
+        then number <> acc
+        else reduce names before (" " <> name <> acc)
     where len = length number
           check num = len - 1 < num.value
-
-getLimit :: Names -> Int
-getLimit names = (head names).value
-
-reduce :: Names -> String -> String -> String
-reduce names number acc
-    | length number - 1 < getLimit names = number <> acc
-    | otherwise = next names number acc
-
+          { name, value } = findLast check names
+          { before } = splitAt (len - value) number
 
 namedNumber :: Names -> BigInt -> String
 namedNumber names value = reduce names (toString value) ""

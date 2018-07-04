@@ -14,8 +14,6 @@
 
 ## Doing
 
-- Remove Maybes from findLast?
-    > Use NonEmpty for lists
 - Main.setup should throw an error rather than returning a Maybe
 - Tests should throw errors instead of returning a Maybe
 
@@ -32,3 +30,5 @@
     * [x] Shouldn't hard-code 2
     * [x] Tidy up code generally
 - Use NonEmpty lists to throw errors/avoid maybes
+- Remove Maybes from findLast?
+    > Use NonEmpty for lists

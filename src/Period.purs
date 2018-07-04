@@ -5,7 +5,7 @@ module Period (
   , period
 ) where
 
-import Prelude ((/), (<), (==), (<$>), (>>=), bind)
+import Prelude ((/), (<), (==), (<$>), bind)
 import Data.Maybe (Maybe(..))
 import Data.List.NonEmpty (NonEmptyList, last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
@@ -40,7 +40,7 @@ check :: Number -> Period -> Boolean
 check time per = time < per.seconds
 
 find' :: Periods -> Number -> Maybe Result
-find' periods time = findLast (check time) Nothing periods >>= smallPeriod time
+find' periods time = smallPeriod time (findLast (check time) periods)
 
 period :: Periods -> Number -> BigInt -> Maybe Result
 period periods calculationsPerSecond possibilities = do
