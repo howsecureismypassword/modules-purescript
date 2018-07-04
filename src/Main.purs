@@ -6,6 +6,7 @@ import Prelude (($), (>>=), bind, pure)
 import Data.Maybe (Maybe(..))
 import Data.Either (Either(..), note)
 import Data.List.NonEmpty (cons, fromFoldable)
+import Data.String (joinWith)
 import Data.Array as Array
 
 import Calculator (UnparsedCharacterSet, CharacterSets, calculate, parseArray)
@@ -14,7 +15,6 @@ import Period (Period, Periods, period)
 import Checker (Checks, Result, check)
 import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
-import Utility (join)
 
 foreign import unsafeThrow :: String -> (String -> Response)
 
@@ -46,7 +46,7 @@ main { calcs, periods, namedNumbers, characterSets, checks } password =
     where possibilities = calculate characterSets password
           time = case period periods calcs possibilities of
               Nothing -> "Something's gone wrong"
-              Just { value, name } -> join (namedNumber namedNumbers value) name
+              Just { value, name } -> joinWith " " [(namedNumber namedNumbers value), name]
 
 setup :: UnparsedConfig -> (String -> Response)
 setup config = case parseConfig config of
