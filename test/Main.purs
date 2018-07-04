@@ -14,9 +14,12 @@ import Test.Calculator as Calculator
 import Test.Utility as Utility
 
 import Main (UnparsedConfig, Response, setup)
+import Period (Period)
 
 foreign import config :: UnparsedConfig
-foreign import catchError :: (UnparsedConfig -> (String -> Response)) -> UnparsedConfig -> String
+foreign import catchSetupError :: (UnparsedConfig -> (String -> Response)) -> UnparsedConfig -> String
+foreign import catchTimeError :: (String -> Response) -> String -> String
+foreign import dodgyPeriod :: Period
 
 -- tests
 main :: Effect Unit
@@ -40,8 +43,8 @@ main = run [consoleReporter] do
                 ]
             }
 
-        it "throws errors" do
-           catchError setup {
+        it "throws parsing errors" do
+           catchSetupError setup {
                calcs: config.calcs,
                periods: [],
                namedNumbers: config.namedNumbers,
@@ -50,7 +53,7 @@ main = run [consoleReporter] do
                patterns: config.patterns
            } `shouldEqual` "Invalid periods dictionary"
 
-           catchError setup {
+           catchSetupError setup {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: [],
@@ -59,7 +62,7 @@ main = run [consoleReporter] do
                patterns: config.patterns
            } `shouldEqual` "Invalid named numbers dictionary"
 
-           catchError setup {
+           catchSetupError setup {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,
@@ -68,7 +71,7 @@ main = run [consoleReporter] do
                patterns: config.patterns
            } `shouldEqual` "Invalid character sets dictionary"
 
-           catchError setup {
+           catchSetupError setup {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,
@@ -77,7 +80,7 @@ main = run [consoleReporter] do
                patterns: config.patterns
            } `shouldEqual` "Invalid password dictionary"
 
-           catchError setup {
+           catchSetupError setup {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,
@@ -85,3 +88,28 @@ main = run [consoleReporter] do
                dictionary: config.dictionary,
                patterns: []
            } `shouldEqual` "Invalid patterns dictionary"
+
+        it "throws time errors" do
+           -- should fail because the seconds value won't convert to a BigInt
+           catchTimeError (setup {
+               calcs: config.calcs,
+               periods: [dodgyPeriod],
+               namedNumbers: config.namedNumbers,
+               characterSets: config.characterSets,
+               dictionary: config.dictionary,
+               patterns: config.patterns
+           }) "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` "Time could not be generated"
+
+           -- should fail because it will lead to division by 0
+           catchTimeError (setup {
+               calcs: config.calcs,
+               periods: [{
+                   singular: "blahtosecond",
+                   plural: "blahtoseconds",
+                   seconds: 0.1
+               }],
+               namedNumbers: config.namedNumbers,
+               characterSets: config.characterSets,
+               dictionary: config.dictionary,
+               patterns: config.patterns
+           }) "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` "Time could not be generated"

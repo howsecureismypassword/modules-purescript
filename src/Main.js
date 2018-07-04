@@ -1,3 +1,6 @@
-exports.unsafeThrow = function (error) {
+var throwError = function (error) {
     throw error;
 };
+
+exports.unsafeThrow = throwError;
+exports.unsafeThrowString = throwError;

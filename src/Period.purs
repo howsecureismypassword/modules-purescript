@@ -5,7 +5,7 @@ module Period (
   , period
 ) where
 
-import Prelude ((||), (/), (<), (==), (<$>), bind)
+import Prelude ((<$>), (>>=), (||), (/), (<), (==), bind, otherwise)
 import Data.Maybe (Maybe(..))
 import Data.List.NonEmpty (NonEmptyList, last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
@@ -35,8 +35,13 @@ result val per = do
     let name = if value == one then per.singular else per.plural
     Just { value, name }
 
+zeroCheck :: Number -> Maybe Number
+zeroCheck n | n < 1.0 = Nothing | otherwise = Just n
+
 bigPeriod :: BigInt -> Period -> Maybe Result
-bigPeriod time per = result ((time `quot` _) <$> fromNumber per.seconds) per
+bigPeriod time per = do
+    let value = (time `quot` _) <$> (zeroCheck per.seconds >>= fromNumber)
+    result value per
 
 smallPeriod :: Number -> Period -> Maybe Result
 smallPeriod time per = result (fromNumber (time / per.seconds)) per

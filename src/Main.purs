@@ -21,6 +21,7 @@ import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 
 foreign import unsafeThrow :: String -> (String -> Response)
+foreign import unsafeThrowString :: String -> String
 
 type UnparsedConfig = {
     calcs :: Number
@@ -65,7 +66,7 @@ main { calcs, calculate', period', namedNumber', check' } password =
 parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
 parseTime namedNumber' period' calcs possibilities =
     case period' calcs possibilities of
-        Nothing -> "Something's gone wrong"
+        Nothing -> unsafeThrowString "Time could not be generated"
         Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult

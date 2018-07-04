@@ -16,10 +16,14 @@ import Period (Period, Result, period)
 
 -- dictionaries
 foreign import periods :: Array Period
+foreign import dodgyPeriods :: Array Period
 
 -- helper functions
 period' :: Number -> BigInt -> Maybe Result
 period' = period (unsafeFromMaybe (fromFoldable periods))
+
+dodgyPeriod :: Number -> BigInt -> Maybe Result
+dodgyPeriod = period (unsafeFromMaybe (fromFoldable dodgyPeriods))
 
 -- tests
 checks :: Spec Unit
@@ -57,3 +61,6 @@ checks = describe "Period (periods)" do
         period' 0.5 (fromInt 31557600) `shouldEqual` Just { value: fromInt 2, name: "years" }
         period' 0.1 (fromInt 31557600) `shouldEqual` Just { value: fromInt 10, name: "years" }
         period' 0.1 (fromInt 10 `pow` fromInt 19) `shouldEqual` Just { value: unsafeFromMaybe (fromNumber 3168808781402.0), name: "years" }
+
+    it "handles division by 0" do
+       dodgyPeriod 1.0 (fromInt 10 `pow` fromInt 20) `shouldEqual` Nothing

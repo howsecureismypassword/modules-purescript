@@ -7,7 +7,13 @@ exports.config = {
     patterns: require("../../dictionaries/patterns"),
 };
 
-exports.catchError = function (fn) {
+exports.dodgyPeriod = {
+    singular: "blahtosecond",
+    plural: "blahtoseconds",
+    seconds: Infinity
+};
+
+var catchError = function (fn) {
     return function (arg) {
         try {
             fn(arg);
@@ -18,3 +24,6 @@ exports.catchError = function (fn) {
         return "";
     };
 };
+
+exports.catchSetupError = catchError;
+exports.catchTimeError = catchError;

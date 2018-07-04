@@ -12,7 +12,6 @@
 - Add Bloom Filter module?
 - Should say "Instantly" if insecure password
     > Language shouldn't be hardcoded
-- Should throw an error if time comes back as Nothing in Main
 
 ## Doing
 
@@ -39,3 +38,4 @@
 - Should output highest security level found
 - More tests for Main
     * [x] Check errors
+- Should throw an error if time comes back as Nothing in Main
