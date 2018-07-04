@@ -1,8 +1,10 @@
 const setup = require("./build.min");
 
 const hsimp = setup({
-    calcs: 40e9,
-    characterSets: require("../dictionaries/character-sets"),
+    calculation: {
+        calcs: 40e9,
+        characterSets: require("../dictionaries/character-sets"),
+    },
     time: {
         periods: require("../dictionaries/periods"),
         namedNumbers: require("../dictionaries/named-numbers"),

@@ -1,6 +1,7 @@
 module Main (setup) where
 
-import Main.Internal (ParseConfig, parseConfig)
+import Main.Internal (Response, main)
+import Main.ParseConfig (UnparsedConfig, parseConfig)
 
-setup :: ParseConfig
-setup = parseConfig
+setup :: UnparsedConfig -> String -> Response
+setup config = main (parseConfig config)

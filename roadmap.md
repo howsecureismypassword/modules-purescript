@@ -12,7 +12,9 @@
 ## Doing
 
 - Tidy up Main
-    * [ ] Move bits into other modules?
+    * [ ] ParseConfig module
+    * [ ] Output module
+    * [ ] Calculations config
 
 ## Done
 
