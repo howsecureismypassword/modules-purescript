@@ -6,9 +6,9 @@ import Data.Either (hush)
 import Data.String.Regex (regex, test)
 import Data.String.Regex.Flags (noFlags)
 
-import Checker (Check, Result, Level)
+import Checker (Check, CheckResult, Level)
 
-result :: String -> Level -> Result
+result :: String -> Level -> CheckResult
 result id level = {
     id: id
   , level: level

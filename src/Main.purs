@@ -2,9 +2,6 @@ module Main (
     UnparsedConfig
   , Response
   , JSResult
-  , forever
-  , instantly
-  , empty
   , setup
 ) where
 
@@ -19,14 +16,11 @@ import Data.Array as Array
 import Calculator (Calculation, UnparsedCharacterSet, calculate, parseArray)
 import NamedNumber (NamedNumberCalc, NamedNumber, namedNumber)
 import Period (PeriodCalc, Period, period)
-import Checker (Checker, Result, check)
+import Checker (Checker, Result, MessageInput, check, parseMessages)
 import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 
 foreign import unsafeThrow :: String -> (String -> Response)
-foreign import forever :: String
-foreign import instantly :: String
-foreign import empty :: String
 
 type UnparsedConfig = {
     calcs :: Number
@@ -35,6 +29,7 @@ type UnparsedConfig = {
   , characterSets :: Array UnparsedCharacterSet
   , dictionary :: Array String
   , patterns :: Array Patterns.Pattern
+  , checkMessages :: Array MessageInput
 }
 
 type ParsedConfig = {
@@ -46,9 +41,9 @@ type ParsedConfig = {
 }
 
 type JSResult = {
-    id :: String
+    name :: String
+  , message :: String
   , level :: String
-  , value :: String
 }
 
 type Response = {
@@ -66,24 +61,24 @@ main { calcs, calculate', period', namedNumber', check' } password =
     }
 
     where checkResults = checksToJS <$> Array.sortWith (_.level) (Array.fromFoldable (check' password))
-          highestLevel = fromMaybe empty ((_.level) <$> Array.head checkResults)
+          highestLevel = fromMaybe "" ((_.level) <$> Array.head checkResults)
 
           time = if highestLevel == "insecure"
-                     then instantly
+                     then "instantly"
                      else parseTime namedNumber' period' calcs (calculate' password)
 
 
 parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
 parseTime namedNumber' period' calcs possibilities =
     case period' calcs possibilities of
-        Nothing -> forever
+        Nothing -> "forever"
         Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult
-checksToJS { id, level, value } = {
-    id
+checksToJS { name, message, level } = {
+    name
+  , message
   , level: show level
-  , value: fromMaybe empty value
 }
 
 setup :: UnparsedConfig -> (String -> Response)
@@ -92,7 +87,7 @@ setup config = case parseConfig config of
      Right main' -> main'
 
 parseConfig :: UnparsedConfig -> Either String (String -> Response)
-parseConfig { calcs, periods, namedNumbers, characterSets, dictionary, patterns } = do
+parseConfig { calcs, periods, namedNumbers, characterSets, dictionary, patterns, checkMessages } = do
     -- dictionaries
     periods' <- note "Invalid periods dictionary" (fromFoldable periods)
     namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable namedNumbers)
@@ -102,10 +97,12 @@ parseConfig { calcs, periods, namedNumbers, characterSets, dictionary, patterns 
     dictionary' <- note "Invalid password dictionary" (fromFoldable dictionary)
     patterns' <- note "Invalid patterns dictionary" (fromFoldable patterns >>= Patterns.patterns)
 
+    let messages = parseMessages checkMessages
+
     pure $ main {
         calcs
       , calculate': calculate characterSets'
       , period': period periods'
       , namedNumber': namedNumber namedNumbers'
-      , check': check (Dictionary.check dictionary' `cons` patterns')
+      , check': check (Dictionary.check dictionary' `cons` patterns') messages
     }

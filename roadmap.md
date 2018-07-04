@@ -13,6 +13,9 @@
 
 ## Doing
 
+- Should accept values for "Forever"/"Instantly"
+    * [ ] Add config
+    * [ ] Remove Constant stuff
 
 ## Done
 
@@ -43,3 +46,4 @@
     * [x] Infinity
 - Use Symbol for Instantly/Forever
 - Return `null` instead of empty strings from Main
+- Should accept Checks dictionary and output message properly

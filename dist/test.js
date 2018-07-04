@@ -1,19 +1,17 @@
-const HSIMP = require("./build.min");
+const setup = require("./build.min");
 
-const hsimp = HSIMP.setup({
+const hsimp = setup({
     calcs: 40e9,
     periods: require("../dictionaries/periods"),
     namedNumbers: require("../dictionaries/named-numbers"),
     characterSets: require("../dictionaries/character-sets"),
     dictionary: require("../dictionaries/top10k"),
     patterns: require("../dictionaries/patterns"),
+    checkMessages: require("../dictionaries/checks"),
 });
 
 console.log(hsimp("HowSecureIsMyPassword?"));
 console.log(hsimp("password1"));
-
-console.log(hsimp("HowSecureIsMyPassword?").checks[0].value === HSIMP.empty);
-console.log(hsimp("password1").time === HSIMP.instantly);
 
 console.time();
 

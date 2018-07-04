@@ -4,9 +4,9 @@ import Prelude ((<$>), (+), show)
 import Data.List.NonEmpty (NonEmptyList, elemIndex)
 import Data.Maybe (Maybe(Just))
 
-import Checker (Check, Result, Level(Insecure))
+import Checker (Check, CheckResult, Level(Insecure))
 
-result :: Int -> Result
+result :: Int -> CheckResult
 result index = {
     id: "common"
   , level: Insecure

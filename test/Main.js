@@ -5,6 +5,7 @@ exports.config = {
     characterSets: require("../../dictionaries/character-sets"),
     dictionary: require("../../dictionaries/top10k"),
     patterns: require("../../dictionaries/patterns"),
+    checkMessages: require("../../dictionaries/checks"),
 };
 
 exports.dodgyPeriod = {

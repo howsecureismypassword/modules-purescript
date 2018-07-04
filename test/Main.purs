@@ -13,7 +13,7 @@ import Test.NamedNumber as NamedNumber
 import Test.Calculator as Calculator
 import Test.Utility as Utility
 
-import Main (UnparsedConfig, Response, setup, forever, instantly, empty)
+import Main (UnparsedConfig, Response, setup)
 import Period (Period)
 
 foreign import config :: UnparsedConfig
@@ -33,24 +33,52 @@ main = run [consoleReporter] do
     describe "Main (setup)" do
         it "parses config" do
             setup config "uekdjeis1" `shouldEqual` {
-                time: "42 minutes"
-              , level: "warning"
-              , checks: [
-                     { id: "just.alphanumeric", level: "warning", value: empty }
-                   , { id: "length.short", level: "warning", value: empty }
-                   , { id: "no.symbols", level: "notice", value: empty }
+                level: "warning",
+                time: "42 minutes",
+                checks: [
+                    {
+                        level: "warning",
+                        message: "Your password looks like it might just be a word and a few digits. This is a very common pattern and would be cracked very quickly.",
+                        name: "Possibly a Word and a Number"
+                    },
+                    {
+                        level: "warning",
+                        message: "Your password is quite short. The longer a password is the more secure it will be.",
+                        name: "Length: Short"
+                    },
+                    {
+                        level: "notice",
+                        message: "Your password only contains numbers and letters. Adding a symbol can make your password more secure. Don't forget you can often use spaces in passwords.",
+                        name: "Character Variety: No Symbols"
+                    }
                 ]
             }
 
         it "shows instant for insecure passwords" do
             setup config "password1" `shouldEqual` {
-                time: instantly
-              , level: "insecure"
-              , checks: [
-                     { id: "common", level: "insecure", value: "621" }
-                   , { id: "just.alphanumeric", level: "warning", value: empty }
-                   , { id: "length.short", level: "warning", value: empty }
-                   , { id: "no.symbols", level: "notice", value: empty }
+                level: "insecure",
+                time: "instantly",
+                checks: [
+                    {
+                        level: "insecure",
+                        message: "Your password is very commonly used. It would be cracked almost instantly.",
+                        name: "Common Password: In the top 621 most used passwords"
+                    },
+                    {
+                        level: "warning",
+                        message: "Your password looks like it might just be a word and a few digits. This is a very common pattern and would be cracked very quickly.",
+                        name: "Possibly a Word and a Number"
+                    },
+                    {
+                        level: "warning",
+                        message: "Your password is quite short. The longer a password is the more secure it will be.",
+                        name: "Length: Short"
+                    },
+                    {
+                        level: "notice",
+                        message: "Your password only contains numbers and letters. Adding a symbol can make your password more secure. Don't forget you can often use spaces in passwords.",
+                        name: "Character Variety: No Symbols"
+                    }
                 ]
             }
 
@@ -65,11 +93,16 @@ main = run [consoleReporter] do
                 namedNumbers: config.namedNumbers,
                 characterSets: config.characterSets,
                 dictionary: config.dictionary,
-                patterns: config.patterns
+                patterns: config.patterns,
+                checkMessages: config.checkMessages
             } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
-                time: forever
-              , level: "achievement"
-              , checks: [{ id: "length.long", level: "achievement", value: empty }]
+                level: "achievement",
+                time: "forever",
+                checks: [{
+                    level: "achievement",
+                    message: "Your password is over sixteen characters long.",
+                    name: "Length: Long"
+                }]
             }
 
 
@@ -80,7 +113,8 @@ main = run [consoleReporter] do
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
                dictionary: config.dictionary,
-               patterns: config.patterns
+               patterns: config.patterns,
+               checkMessages: config.checkMessages
            } `shouldEqual` "Invalid periods dictionary"
 
            catchSetupError setup {
@@ -89,7 +123,8 @@ main = run [consoleReporter] do
                namedNumbers: [],
                characterSets: config.characterSets,
                dictionary: config.dictionary,
-               patterns: config.patterns
+               patterns: config.patterns,
+               checkMessages: config.checkMessages
            } `shouldEqual` "Invalid named numbers dictionary"
 
            catchSetupError setup {
@@ -98,7 +133,8 @@ main = run [consoleReporter] do
                namedNumbers: config.namedNumbers,
                characterSets: [],
                dictionary: config.dictionary,
-               patterns: config.patterns
+               patterns: config.patterns,
+               checkMessages: config.checkMessages
            } `shouldEqual` "Invalid character sets dictionary"
 
            catchSetupError setup {
@@ -107,7 +143,8 @@ main = run [consoleReporter] do
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
                dictionary: [],
-               patterns: config.patterns
+               patterns: config.patterns,
+               checkMessages: config.checkMessages
            } `shouldEqual` "Invalid password dictionary"
 
            catchSetupError setup {
@@ -116,5 +153,6 @@ main = run [consoleReporter] do
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
                dictionary: config.dictionary,
-               patterns: []
+               patterns: [],
+               checkMessages: config.checkMessages
            } `shouldEqual` "Invalid patterns dictionary"

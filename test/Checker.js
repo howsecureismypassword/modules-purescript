@@ -2,7 +2,9 @@
 const top10 = require("../../dictionaries/top10");
 const top10k = require("../../dictionaries/top10k");
 const patterns = require("../../dictionaries/patterns");
+const checkMessages = require("../../dictionaries/checks");
 
 exports.top10 = top10;
 exports.top10k = top10k;
 exports.patterns = patterns;
+exports.checkMessages = checkMessages;

@@ -25,7 +25,7 @@
 
     {
         "level": "warning",
-        "id": "only-numbers",
+        "id": "just.numbers",
         "regex": "^[0-9]+$"
     },
 
