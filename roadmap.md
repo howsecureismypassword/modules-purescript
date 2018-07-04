@@ -3,8 +3,6 @@
 
 ## Bugs
 
-- Period conks out if more than a year's worth of seconds and calcsPerSecond is less than 1
-    > Store everything in yoctoseconds?
 
 ## Features
 
@@ -31,3 +29,5 @@
 - Main.setup should throw an error rather than returning a Maybe
 - Remove Maybes from findLast?
     > Use NonEmpty for lists
+- Period conks out if more than a year's worth of seconds and calcsPerSecond is less than 1
+    > Store everything in yoctoseconds?
