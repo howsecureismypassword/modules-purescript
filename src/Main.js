@@ -3,4 +3,3 @@ var throwError = function (error) {
 };
 
 exports.unsafeThrow = throwError;
-exports.unsafeThrowString = throwError;

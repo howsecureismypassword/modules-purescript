@@ -5,7 +5,7 @@ module Main (
   , setup
 ) where
 
-import Prelude (($), (<$>), (>>=), bind, pure, show)
+import Prelude (($), (<$>), (>>=), (==), bind, pure, show)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Either (Either(..), note)
 import Data.List.NonEmpty (cons, fromFoldable)
@@ -21,7 +21,6 @@ import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 
 foreign import unsafeThrow :: String -> (String -> Response)
-foreign import unsafeThrowString :: String -> String
 
 type UnparsedConfig = {
     calcs :: Number
@@ -55,18 +54,23 @@ type Response = {
 main :: ParsedConfig -> String -> Response
 main { calcs, calculate', period', namedNumber', check' } password =
     {
-        time: parseTime namedNumber' period' calcs (calculate' password)
-      , level: fromMaybe "" ((_.level) <$> Array.head checkResults)
+        time: time
+      , level: highestLevel
       , checks: checkResults
     }
 
     where checkResults = checksToJS <$> Array.sortWith (_.level) (Array.fromFoldable (check' password))
+          highestLevel = fromMaybe "" ((_.level) <$> Array.head checkResults)
+
+          time = if highestLevel == "insecure"
+                     then "instantly"
+                     else parseTime namedNumber' period' calcs (calculate' password)
 
 
 parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
 parseTime namedNumber' period' calcs possibilities =
     case period' calcs possibilities of
-        Nothing -> unsafeThrowString "Time could not be generated"
+        Nothing -> "forever"
         Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult

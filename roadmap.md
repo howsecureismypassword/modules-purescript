@@ -10,11 +10,11 @@
 
 - Use haveibeenpwned API
 - Add Bloom Filter module?
-- Should say "Instantly" if insecure password
-    > Language shouldn't be hardcoded
 
 ## Doing
 
+- Use Symbol for Instantly/Forever
+- Return `null` instead of empty strings from Main
 
 ## Done
 
@@ -39,3 +39,7 @@
 - More tests for Main
     * [x] Check errors
 - Should throw an error if time comes back as Nothing in Main
+- Handles Instant and Infinity
+    > Should handle Infinity and Instant results somehow
+    * [x] Instant
+    * [x] Infinity

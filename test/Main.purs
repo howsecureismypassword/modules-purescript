@@ -32,8 +32,19 @@ main = run [consoleReporter] do
 
     describe "Main (setup)" do
         it "parses config" do
-            setup config "password1" `shouldEqual` {
+            setup config "uekdjeis1" `shouldEqual` {
                 time: "42 minutes"
+              , level: "warning"
+              , checks: [
+                     { id: "just.alphanumeric", level: "warning", value: "" }
+                   , { id: "length.short", level: "warning", value: "" }
+                   , { id: "no.symbols", level: "notice", value: "" }
+                ]
+            }
+
+        it "shows instant for insecure passwords" do
+            setup config "password1" `shouldEqual` {
+                time: "instantly"
               , level: "insecure"
               , checks: [
                      { id: "common", level: "insecure", value: "621" }
@@ -42,6 +53,25 @@ main = run [consoleReporter] do
                    , { id: "no.symbols", level: "notice", value: "" }
                 ]
             }
+
+        it "shows forever for secure passwords" do
+            setup {
+                calcs: config.calcs,
+                periods: [{
+                    singular: "blahtosecond",
+                    plural: "blahtoseconds",
+                    seconds: 0.1
+                }],
+                namedNumbers: config.namedNumbers,
+                characterSets: config.characterSets,
+                dictionary: config.dictionary,
+                patterns: config.patterns
+            } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
+                time: "forever"
+              , level: "achievement"
+              , checks: [{ id: "length.long", level: "achievement", value: "" }]
+            }
+
 
         it "throws parsing errors" do
            catchSetupError setup {
@@ -88,28 +118,3 @@ main = run [consoleReporter] do
                dictionary: config.dictionary,
                patterns: []
            } `shouldEqual` "Invalid patterns dictionary"
-
-        it "throws time errors" do
-           -- should fail because the seconds value won't convert to a BigInt
-           catchTimeError (setup {
-               calcs: config.calcs,
-               periods: [dodgyPeriod],
-               namedNumbers: config.namedNumbers,
-               characterSets: config.characterSets,
-               dictionary: config.dictionary,
-               patterns: config.patterns
-           }) "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` "Time could not be generated"
-
-           -- should fail because it will lead to division by 0
-           catchTimeError (setup {
-               calcs: config.calcs,
-               periods: [{
-                   singular: "blahtosecond",
-                   plural: "blahtoseconds",
-                   seconds: 0.1
-               }],
-               namedNumbers: config.namedNumbers,
-               characterSets: config.characterSets,
-               dictionary: config.dictionary,
-               patterns: config.patterns
-           }) "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` "Time could not be generated"
