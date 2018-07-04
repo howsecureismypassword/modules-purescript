@@ -1,8 +1,13 @@
-module Period (Period, Result, period) where
+module Period (
+    Periods
+  , Period
+  , Result
+  , period
+) where
 
 import Prelude ((/), (<), (==), (<$>), (>>=), bind)
 import Data.Maybe (Maybe(..))
-import Data.List (List, last)
+import Data.List.NonEmpty (NonEmptyList, last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
 
@@ -12,7 +17,7 @@ type Period = {
   , seconds :: Number
 }
 
-type Periods = List Period
+type Periods = NonEmptyList Period
 
 type Result = {
     value :: BigInt
@@ -37,9 +42,9 @@ check time per = time < per.seconds
 find' :: Periods -> Number -> Maybe Result
 find' periods time = findLast (check time) Nothing periods >>= smallPeriod time
 
-period :: List Period -> Number -> BigInt -> Maybe Result
+period :: Periods -> Number -> BigInt -> Maybe Result
 period periods calculationsPerSecond possibilities = do
-    lst <- last periods
+    let lst = last periods
     calcs <- fromNumber calculationsPerSecond
 
     let time = toNumber possibilities / calculationsPerSecond

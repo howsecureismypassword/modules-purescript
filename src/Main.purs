@@ -2,15 +2,15 @@ module Main (
     setup
 ) where
 
-import Prelude (($))
+import Prelude (($), (>>=), bind, pure)
 import Data.Maybe (Maybe(..))
-import Data.List (List, (:), fromFoldable)
+import Data.List.NonEmpty (cons, fromFoldable)
 import Data.Array as Array
 
-import Calculator (UnparsedCharacterSet, CharacterSet, calculate, parseArray)
-import NamedNumber (NamedNumber, namedNumber)
-import Period (Period, period)
-import Checker (Check, Result, check)
+import Calculator (UnparsedCharacterSet, CharacterSets, calculate, parseArray)
+import NamedNumber (NamedNumber, Names, namedNumber)
+import Period (Period, Periods, period)
+import Checker (Checks, Result, check)
 import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 import Utility (join)
@@ -26,10 +26,10 @@ type UnparsedConfig = {
 
 type ParsedConfig = {
     calcs :: Number
-  , periods :: List Period
-  , namedNumbers :: List NamedNumber
-  , characterSets :: List CharacterSet
-  , checks :: List Check
+  , periods :: Periods
+  , namedNumbers :: Names
+  , characterSets :: CharacterSets
+  , checks :: Checks
 }
 
 type Response = {
@@ -46,12 +46,22 @@ main { calcs, periods, namedNumbers, characterSets, checks } password =
               Just { value, name } -> join (namedNumber namedNumbers value) name
 
 
-setup :: UnparsedConfig -> (String -> Response)
-setup { calcs, periods, namedNumbers, characterSets, dictionary, patterns } =
-    main {
+setup :: UnparsedConfig -> Maybe (String -> Response)
+setup { calcs, periods, namedNumbers, characterSets, dictionary, patterns } = do
+
+    -- dictionaries
+    periods' <- fromFoldable periods
+    namedNumbers' <- fromFoldable namedNumbers
+    characterSets' <- parseArray characterSets
+
+    -- checks
+    dictionary' <- fromFoldable dictionary
+    patterns' <- fromFoldable patterns >>= Patterns.patterns
+
+    pure $ main {
         calcs
-      , periods: fromFoldable periods
-      , namedNumbers: fromFoldable namedNumbers
-      , characterSets: parseArray characterSets
-      , checks: (Dictionary.check (fromFoldable dictionary) : Patterns.patterns (fromFoldable patterns))
+      , periods: periods'
+      , namedNumbers: namedNumbers'
+      , characterSets: characterSets'
+      , checks: (Dictionary.check dictionary' `cons` patterns')
     }

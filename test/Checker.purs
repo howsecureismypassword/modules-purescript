@@ -1,10 +1,11 @@
 module Test.Checker where
 
-import Prelude (Unit, discard)
+import Prelude (($), Unit, discard, bind, pure)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Data.List (fromFoldable)
+import Data.List as List
+import Data.List.NonEmpty (fromFoldable)
 import Data.Maybe (Maybe(..))
 
 -- tested modules
@@ -19,26 +20,33 @@ foreign import top10 :: Array String
 foreign import top10k :: Array String
 foreign import patterns :: Array Patterns.Pattern
 
-check' :: String -> Results
-check' = check (fromFoldable [
-    Dictionary.check (fromFoldable top10)
-  , Pattern.check "length.short" Warning "^.{7,9}$"
-])
+check' :: String -> Maybe Results
+check' password = do
+    dictionary <- fromFoldable top10
+    checks' <- fromFoldable [
+            Dictionary.check dictionary
+          , Pattern.check "length.short" Warning "^.{7,9}$"
+        ]
+    pure $ check checks' password
 
-check10k :: String -> Results
-check10k = check (fromFoldable [
-    Dictionary.check (fromFoldable top10k)
-])
+check10k :: String -> Maybe Results
+check10k password = do
+    dictionary <- fromFoldable top10k
+    checks' <- fromFoldable [Dictionary.check dictionary]
+    pure $ check checks' password
 
-patternsCheck :: String -> Results
-patternsCheck = check (Patterns.patterns (fromFoldable patterns))
+patternsCheck :: String -> Maybe Results
+patternsCheck password = do
+    patterns' <- fromFoldable patterns
+    checks' <- Patterns.patterns patterns'
+    pure $ check checks' password
 
 
 -- tests
 checks :: Spec Unit
 checks = describe "Checks (checks)" do
     it "checks" do
-        check' "password" `shouldEqual` fromFoldable [{
+        check' "password" `shouldEqual` Just (List.fromFoldable [{
             id: "common",
             level: Insecure,
             value: Just "1"
@@ -46,27 +54,27 @@ checks = describe "Checks (checks)" do
             id: "length.short",
             level: Warning,
             value: Nothing
-        }]
+        }])
 
-        check' "qwerty" `shouldEqual` fromFoldable [{
+        check' "qwerty" `shouldEqual` Just (List.fromFoldable [{
             id: "common",
             level: Insecure,
             value: Just "5"
-        }]
+        }])
 
-        check10k "gocats" `shouldEqual` fromFoldable [{
+        check10k "gocats" `shouldEqual` Just (List.fromFoldable [{
             id: "common",
             level: Insecure,
             value: Just "9918"
-        }]
+        }])
 
-        check' "abcd1234" `shouldEqual` fromFoldable [{
+        check' "abcd1234" `shouldEqual` Just (List.fromFoldable [{
             id: "length.short",
             level: Warning,
             value: Nothing
-        }]
+        }])
 
-        patternsCheck "abcd1234" `shouldEqual` fromFoldable [{
+        patternsCheck "abcd1234" `shouldEqual` Just (List.fromFoldable [{
             id: "just.alphanumeric",
             level: Warning,
             value: Nothing
@@ -78,9 +86,9 @@ checks = describe "Checks (checks)" do
             id: "no.symbols",
             level: Notice,
             value: Nothing
-        }]
+        }])
 
-        patternsCheck "correcthorsebatterystaple" `shouldEqual` fromFoldable [{
+        patternsCheck "correcthorsebatterystaple" `shouldEqual` Just (List.fromFoldable [{
             id: "xkcd",
             level: EasterEgg,
             value: Nothing
@@ -92,4 +100,4 @@ checks = describe "Checks (checks)" do
             id: "length.long",
             level: Achievement,
             value: Nothing
-        }]
+        }])

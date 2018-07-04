@@ -5,9 +5,9 @@ module Checks.Patterns (
 
 import Prelude (($), (<$>), bind, pure)
 import Data.Maybe (Maybe)
-import Data.List (List, catMaybes)
+import Data.List.NonEmpty (NonEmptyList, catMaybes, fromFoldable)
 
-import Checker (Check, read)
+import Checker (Checks, Check, read)
 import Checks.Pattern (check)
 
 type Pattern = {
@@ -16,10 +16,12 @@ type Pattern = {
   , level :: String
 }
 
+type Patterns = NonEmptyList Pattern
+
 patternToCheck :: Pattern -> Maybe Check
 patternToCheck { id, level, regex } = do
     lev <- read level
     pure $ check id lev regex
 
-patterns :: List Pattern -> List Check
-patterns ps = catMaybes $ patternToCheck <$> ps
+patterns :: Patterns -> Maybe Checks
+patterns ps = fromFoldable $ catMaybes (patternToCheck <$> ps)

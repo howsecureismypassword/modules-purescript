@@ -1,10 +1,14 @@
-module NamedNumber (NamedNumber, namedNumber) where
+module NamedNumber (
+    Names
+  , NamedNumber
+  , namedNumber
+) where
 
-import Prelude ((<$>), (<>), (<), (-), otherwise)
+import Prelude ((<>), (<), (-), otherwise)
 import Data.String (length, splitAt)
 import Data.BigInt (BigInt, toString)
-import Data.List (List, head)
-import Data.Maybe(Maybe(..), fromMaybe)
+import Data.List.NonEmpty (NonEmptyList, head)
+import Data.Maybe(Maybe(..))
 
 import Utility (findLast)
 
@@ -13,9 +17,9 @@ type NamedNumber = {
   , value :: Int
 }
 
-type Names = List NamedNumber
+type Names = NonEmptyList NamedNumber
 
-type Strings = List String
+type Strings = NonEmptyList String
 
 type Result = {
     value :: Int
@@ -33,7 +37,7 @@ next names number acc =
           check num = len - 1 < num.value
 
 getLimit :: Names -> Int
-getLimit names = fromMaybe 2 ((\h -> h.value) <$> head names)
+getLimit names = (head names).value
 
 reduce :: Names -> String -> String -> String
 reduce names number acc
@@ -41,5 +45,5 @@ reduce names number acc
     | otherwise = next names number acc
 
 
-namedNumber :: List NamedNumber -> BigInt -> String
+namedNumber :: Names -> BigInt -> String
 namedNumber names value = reduce names (toString value) ""

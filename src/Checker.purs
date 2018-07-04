@@ -2,13 +2,15 @@ module Checker (
     check
   , read
   , Check
+  , Checks
   , Result
   , Results
   , Level(..)
 ) where
 
 import Prelude (($), (<$>), class Show, class Eq)
-import Data.List (List, catMaybes)
+import Data.List (List)
+import Data.List.NonEmpty (NonEmptyList, catMaybes)
 import Data.Maybe (Maybe(..))
 
 data Level = Highlight | Insecure | Warning | Achievement | Notice | EasterEgg
@@ -38,8 +40,8 @@ type Result = {
 }
 
 type Results = List Result
-
 type Check = String -> Maybe Result
+type Checks = NonEmptyList Check
 
-check :: List Check -> String -> Results
+check :: Checks -> String -> Results
 check checks password = catMaybes $ (_ $ password) <$> checks

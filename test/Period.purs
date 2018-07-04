@@ -1,11 +1,11 @@
 module Test.Period where
 
-import Prelude (Unit, discard)
+import Prelude (Unit, discard, bind)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Math (pow)
-import Data.List (fromFoldable)
+import Data.List.NonEmpty (fromFoldable)
 import Data.Maybe (Maybe(..))
 import Data.BigInt (BigInt, fromInt)
 
@@ -17,7 +17,9 @@ foreign import periods :: Array Period
 
 -- helper functions
 period' :: Number -> BigInt -> Maybe Result
-period' = period (fromFoldable periods)
+period' num int = do
+    periods' <- fromFoldable periods
+    period periods' num int
 
 -- tests
 checks :: Spec Unit

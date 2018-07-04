@@ -1,17 +1,19 @@
 module Utility where
 
-import Prelude ((&&),(<>), otherwise, bind)
-import Data.List (List, head, tail, null)
+import Prelude ((&&),(<>))
+import Data.List.NonEmpty (NonEmptyList, fromFoldable, head, tail)
 import Data.Maybe (Maybe(..), isJust)
 
-findLast :: forall a. (a -> Boolean) -> Maybe a -> List a -> Maybe a
+findLast :: forall a. (a -> Boolean) -> Maybe a -> NonEmptyList a -> Maybe a
 findLast fn prev list = do
-    x <- head list
-    xs <- tail list
-    let val | isJust prev && fn x = prev
-            | null xs = Just x
-            | otherwise = findLast fn (Just x) xs
-    val
+    let x = head list
+        xs = fromFoldable (tail list)
+
+    if isJust prev && fn x
+        then prev
+        else case xs of
+            Nothing -> Just x
+            Just nxs -> findLast fn (Just x) nxs
 
 join :: String -> String -> String
 join str n = str <> " " <> n
