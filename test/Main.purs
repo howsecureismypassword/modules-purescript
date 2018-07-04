@@ -13,9 +13,10 @@ import Test.NamedNumber as NamedNumber
 import Test.Calculator as Calculator
 import Test.Utility as Utility
 
-import Main (UnparsedConfig, setup)
+import Main (UnparsedConfig, Response, setup)
 
 foreign import config :: UnparsedConfig
+foreign import catchError :: (UnparsedConfig -> (String -> Response)) -> UnparsedConfig -> String
 
 -- tests
 main :: Effect Unit
@@ -38,3 +39,49 @@ main = run [consoleReporter] do
                    , { id: "no.symbols", level: "notice", value: "" }
                 ]
             }
+
+        it "throws errors" do
+           catchError setup {
+               calcs: config.calcs,
+               periods: [],
+               namedNumbers: config.namedNumbers,
+               characterSets: config.characterSets,
+               dictionary: config.dictionary,
+               patterns: config.patterns
+           } `shouldEqual` "Invalid periods dictionary"
+
+           catchError setup {
+               calcs: config.calcs,
+               periods: config.periods,
+               namedNumbers: [],
+               characterSets: config.characterSets,
+               dictionary: config.dictionary,
+               patterns: config.patterns
+           } `shouldEqual` "Invalid named numbers dictionary"
+
+           catchError setup {
+               calcs: config.calcs,
+               periods: config.periods,
+               namedNumbers: config.namedNumbers,
+               characterSets: [],
+               dictionary: config.dictionary,
+               patterns: config.patterns
+           } `shouldEqual` "Invalid character sets dictionary"
+
+           catchError setup {
+               calcs: config.calcs,
+               periods: config.periods,
+               namedNumbers: config.namedNumbers,
+               characterSets: config.characterSets,
+               dictionary: [],
+               patterns: config.patterns
+           } `shouldEqual` "Invalid password dictionary"
+
+           catchError setup {
+               calcs: config.calcs,
+               periods: config.periods,
+               namedNumbers: config.namedNumbers,
+               characterSets: config.characterSets,
+               dictionary: config.dictionary,
+               patterns: []
+           } `shouldEqual` "Invalid patterns dictionary"

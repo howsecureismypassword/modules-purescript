@@ -1,5 +1,7 @@
 module Main (
     UnparsedConfig
+  , Response
+  , JSResult
   , setup
 ) where
 

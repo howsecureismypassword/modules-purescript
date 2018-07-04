@@ -37,3 +37,5 @@
     > Store everything in yoctoseconds?
 - Final output values need to be in JS native formats
 - Should output highest security level found
+- More tests for Main
+    * [x] Check errors

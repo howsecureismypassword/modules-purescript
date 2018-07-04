@@ -6,3 +6,15 @@ exports.config = {
     dictionary: require("../../dictionaries/top10k"),
     patterns: require("../../dictionaries/patterns"),
 };
+
+exports.catchError = function (fn) {
+    return function (arg) {
+        try {
+            fn(arg);
+        } catch (e) {
+            return e;
+        }
+
+        return "";
+    };
+};
