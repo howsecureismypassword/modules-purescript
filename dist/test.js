@@ -12,6 +12,7 @@ const hsimp = setup({
 
 console.log(hsimp("HowSecureIsMyPassword?"));
 console.log(hsimp("password1"));
+console.log(hsimp("ab14&fj8hdj*"));
 
 console.time();
 

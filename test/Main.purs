@@ -15,6 +15,8 @@ import Test.Utility as Utility
 
 import Main (UnparsedConfig, Response, setup)
 import Period (Period)
+import Data.Nullable (toNullable)
+import Data.Maybe (Maybe(Just))
 
 foreign import config :: UnparsedConfig
 foreign import catchSetupError :: (UnparsedConfig -> (String -> Response)) -> UnparsedConfig -> String
@@ -33,7 +35,7 @@ main = run [consoleReporter] do
     describe "Main (setup)" do
         it "parses config" do
             setup config "uekdjeis1" `shouldEqual` {
-                level: "warning",
+                level: toNullable (Just "warning"),
                 time: "42 minutes",
                 checks: [
                     {
@@ -56,7 +58,7 @@ main = run [consoleReporter] do
 
         it "shows instant for insecure passwords" do
             setup config "password1" `shouldEqual` {
-                level: "insecure",
+                level: toNullable (Just "insecure"),
                 time: "instantly",
                 checks: [
                     {
@@ -96,7 +98,7 @@ main = run [consoleReporter] do
                 patterns: config.patterns,
                 checkMessages: config.checkMessages
             } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
-                level: "achievement",
+                level: toNullable (Just "achievement"),
                 time: "forever",
                 checks: [{
                     level: "achievement",

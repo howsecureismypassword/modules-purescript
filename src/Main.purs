@@ -12,6 +12,7 @@ import Data.List.NonEmpty (cons, fromFoldable)
 import Data.String (joinWith)
 import Data.BigInt (BigInt)
 import Data.Array as Array
+import Data.Nullable (Nullable(), toNullable)
 
 import Calculator (Calculation, UnparsedCharacterSet, calculate, parseArray)
 import NamedNumber (NamedNumberCalc, NamedNumber, namedNumber)
@@ -48,7 +49,7 @@ type JSResult = {
 
 type Response = {
     time :: String
-  , level :: String
+  , level :: Nullable String
   , checks :: Array JSResult
 }
 
@@ -56,16 +57,16 @@ main :: ParsedConfig -> String -> Response
 main { calcs, calculate', period', namedNumber', check' } password =
     {
         time: time
-      , level: highestLevel
+      , level: toNullable highestLevel
       , checks: checkResults
     }
 
     where checkResults = checksToJS <$> Array.sortWith (_.level) (Array.fromFoldable (check' password))
-          highestLevel = fromMaybe "" ((_.level) <$> Array.head checkResults)
+          highestLevel = ((_.level) <$> Array.head checkResults)
 
-          time = if highestLevel == "insecure"
-                     then "instantly"
-                     else parseTime namedNumber' period' calcs (calculate' password)
+          time = case highestLevel of
+                     Just "insecure" -> "instantly"
+                     _ -> parseTime namedNumber' period' calcs (calculate' password)
 
 
 parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
