@@ -12,6 +12,7 @@
 
 ## Doing
 
+- Should throw an error if time comes back as Nothing in Main
 
 ## Done
 
@@ -31,3 +32,4 @@
     > Use NonEmpty for lists
 - Period conks out if more than a year's worth of seconds and calcsPerSecond is less than 1
     > Store everything in yoctoseconds?
+- Final output values need to be in JS native formats

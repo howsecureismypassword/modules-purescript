@@ -17,20 +17,20 @@ data Level = Highlight | Insecure | Warning | Achievement | Notice | EasterEgg
 derive instance eqLevel :: Eq Level
 
 instance showLevel :: Show Level where
-    show Highlight = "Highlight"
-    show Insecure = "Insecure"
-    show Warning = "Warning"
-    show Achievement = "Achievement"
-    show Notice = "Notice"
-    show EasterEgg = "EasterEgg"
+    show Highlight = "highlight"
+    show Insecure = "insecure"
+    show Warning = "warning"
+    show Achievement = "achievement"
+    show Notice = "notice"
+    show EasterEgg = "easterEgg"
 
 read :: String -> Maybe Level
-read "Highlight" = Just Highlight
-read "Insecure" = Just Insecure
-read "Warning" = Just Warning
-read "Achievement" = Just Achievement
-read "Notice" = Just Notice
-read "EasterEgg" = Just EasterEgg
+read "highlight" = Just Highlight
+read "insecure" = Just Insecure
+read "warning" = Just Warning
+read "achievement" = Just Achievement
+read "notice" = Just Notice
+read "easterEgg" = Just EasterEgg
 read _ = Nothing
 
 type Result = {

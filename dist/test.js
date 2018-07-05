@@ -9,6 +9,9 @@ const hsimp = setup({
     patterns: require("../dictionaries/patterns"),
 });
 
+console.log(hsimp("HowSecureIsMyPassword?"));
+console.log(hsimp("password1"));
+
 console.time();
 
 for (let i = 0; i < 1000; i++) {
