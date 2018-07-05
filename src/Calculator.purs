@@ -1,7 +1,7 @@
 module Calculator (
-    UnparsedCharacterSet
+    Calculation
+  , UnparsedCharacterSet
   , CharacterSet
-  , CharacterSets
   , calculate
   , parseArray
 ) where
@@ -49,5 +49,7 @@ check password acc { matches, value }
 foundIn :: CharacterSets -> String -> Int
 foundIn sets password = foldl (check password) 0 sets
 
-calculate :: CharacterSets -> String -> BigInt
+type Calculation = String -> BigInt
+
+calculate :: CharacterSets -> Calculation
 calculate sets password = (fromInt $ foundIn sets password) `pow` (fromInt $ length password)

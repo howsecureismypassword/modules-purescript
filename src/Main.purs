@@ -1,5 +1,6 @@
 module Main (
-    setup
+    UnparsedConfig
+  , setup
 ) where
 
 import Prelude (($), (<$>), (>>=), bind, pure, show)
@@ -7,12 +8,13 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Either (Either(..), note)
 import Data.List.NonEmpty (cons, fromFoldable)
 import Data.String (joinWith)
+import Data.BigInt (BigInt)
 import Data.Array as Array
 
-import Calculator (UnparsedCharacterSet, CharacterSets, calculate, parseArray)
-import NamedNumber (NamedNumber, Names, namedNumber)
-import Period (Period, Periods, period)
-import Checker (Checks, Result, check)
+import Calculator (Calculation, UnparsedCharacterSet, calculate, parseArray)
+import NamedNumber (NamedNumberCalc, NamedNumber, namedNumber)
+import Period (PeriodCalc, Period, period)
+import Checker (Checker, Result, check)
 import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 
@@ -29,10 +31,10 @@ type UnparsedConfig = {
 
 type ParsedConfig = {
     calcs :: Number
-  , periods :: Periods
-  , namedNumbers :: Names
-  , characterSets :: CharacterSets
-  , checks :: Checks
+  , calculate' :: Calculation
+  , period' :: PeriodCalc
+  , namedNumber' :: NamedNumberCalc
+  , check' :: Checker
 }
 
 type JSResult = {
@@ -43,16 +45,26 @@ type JSResult = {
 
 type Response = {
     time :: String
+  , level :: String
   , checks :: Array JSResult
 }
 
 main :: ParsedConfig -> String -> Response
-main { calcs, periods, namedNumbers, characterSets, checks } password =
-    { time, checks: Array.fromFoldable $ checksToJS <$> check checks password }
-    where possibilities = calculate characterSets password
-          time = case period periods calcs possibilities of
-              Nothing -> "Something's gone wrong"
-              Just { value, name } -> joinWith " " [(namedNumber namedNumbers value), name]
+main { calcs, calculate', period', namedNumber', check' } password =
+    {
+        time: parseTime namedNumber' period' calcs (calculate' password)
+      , level: fromMaybe "" ((_.level) <$> Array.head checkResults)
+      , checks: checkResults
+    }
+
+    where checkResults = checksToJS <$> Array.sortWith (_.level) (Array.fromFoldable (check' password))
+
+
+parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
+parseTime namedNumber' period' calcs possibilities =
+    case period' calcs possibilities of
+        Nothing -> "Something's gone wrong"
+        Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult
 checksToJS { id, level, value } = {
@@ -79,8 +91,8 @@ parseConfig { calcs, periods, namedNumbers, characterSets, dictionary, patterns 
 
     pure $ main {
         calcs
-      , periods: periods'
-      , namedNumbers: namedNumbers'
-      , characterSets: characterSets'
-      , checks: (Dictionary.check dictionary' `cons` patterns')
+      , calculate': calculate characterSets'
+      , period': period periods'
+      , namedNumber': namedNumber namedNumbers'
+      , check': check (Dictionary.check dictionary' `cons` patterns')
     }

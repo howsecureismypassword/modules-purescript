@@ -1,5 +1,5 @@
 module NamedNumber (
-    Names
+    NamedNumberCalc
   , NamedNumber
   , namedNumber
 ) where
@@ -35,5 +35,7 @@ reduce names number acc =
           { name, value } = findLast check names
           { before } = splitAt (len - value) number
 
-namedNumber :: Names -> BigInt -> String
+type NamedNumberCalc = BigInt -> String
+
+namedNumber :: Names -> NamedNumberCalc
 namedNumber names value = reduce names (toString value) ""

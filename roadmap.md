@@ -1,5 +1,7 @@
 ## Refactor
 
+- Tidy up Main
+    * [ ] Move bits into other modules?
 
 ## Bugs
 
@@ -8,11 +10,12 @@
 
 - Use haveibeenpwned API
 - Add Bloom Filter module?
-- Should output highest security level found
+- Should say "Instantly" if insecure password
+    > Language shouldn't be hardcoded
+- Should throw an error if time comes back as Nothing in Main
 
 ## Doing
 
-- Should throw an error if time comes back as Nothing in Main
 
 ## Done
 
@@ -33,3 +36,4 @@
 - Period conks out if more than a year's worth of seconds and calcsPerSecond is less than 1
     > Store everything in yoctoseconds?
 - Final output values need to be in JS native formats
+- Should output highest security level found

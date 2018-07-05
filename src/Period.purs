@@ -1,5 +1,5 @@
 module Period (
-    Periods
+    PeriodCalc
   , Period
   , Result
   , period
@@ -44,7 +44,9 @@ smallPeriod time per = result (fromNumber (time / per.seconds)) per
 check :: Number -> Period -> Boolean
 check time per = time < per.seconds
 
-period :: Periods -> Number -> BigInt -> Maybe Result
+type PeriodCalc = Number -> BigInt -> Maybe Result
+
+period :: Periods -> PeriodCalc
 period periods calculationsPerSecond possibilities = do
     let lst = last periods
     calcs <- fromNumber calculationsPerSecond

@@ -1,6 +1,7 @@
 module Checker (
     check
   , read
+  , Checker
   , Check
   , Checks
   , Result
@@ -8,13 +9,14 @@ module Checker (
   , Level(..)
 ) where
 
-import Prelude (($), (<$>), class Show, class Eq)
+import Prelude (($), (<$>), class Show, class Eq, class Ord)
 import Data.List (List)
 import Data.List.NonEmpty (NonEmptyList, catMaybes)
 import Data.Maybe (Maybe(..))
 
-data Level = Highlight | Insecure | Warning | Achievement | Notice | EasterEgg
+data Level = Insecure | Warning | EasterEgg | Notice | Achievement | Highlight
 derive instance eqLevel :: Eq Level
+derive instance ordLevel :: Ord Level
 
 instance showLevel :: Show Level where
     show Highlight = "highlight"
@@ -43,5 +45,7 @@ type Results = List Result
 type Check = String -> Maybe Result
 type Checks = NonEmptyList Check
 
-check :: Checks -> String -> Results
+type Checker = String -> Results
+
+check :: Checks -> Checker
 check checks password = catMaybes $ (_ $ password) <$> checks
