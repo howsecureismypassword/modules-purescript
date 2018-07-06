@@ -2,6 +2,9 @@ module Main (
     UnparsedConfig
   , Response
   , JSResult
+  , forever
+  , instantly
+  , empty
   , setup
 ) where
 
@@ -21,6 +24,9 @@ import Checks.Dictionary as Dictionary
 import Checks.Patterns as Patterns
 
 foreign import unsafeThrow :: String -> (String -> Response)
+foreign import forever :: String
+foreign import instantly :: String
+foreign import empty :: String
 
 type UnparsedConfig = {
     calcs :: Number
@@ -60,24 +66,24 @@ main { calcs, calculate', period', namedNumber', check' } password =
     }
 
     where checkResults = checksToJS <$> Array.sortWith (_.level) (Array.fromFoldable (check' password))
-          highestLevel = fromMaybe "" ((_.level) <$> Array.head checkResults)
+          highestLevel = fromMaybe empty ((_.level) <$> Array.head checkResults)
 
           time = if highestLevel == "insecure"
-                     then "instantly"
+                     then instantly
                      else parseTime namedNumber' period' calcs (calculate' password)
 
 
 parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
 parseTime namedNumber' period' calcs possibilities =
     case period' calcs possibilities of
-        Nothing -> "forever"
+        Nothing -> forever
         Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult
 checksToJS { id, level, value } = {
     id
   , level: show level
-  , value: fromMaybe "" value
+  , value: fromMaybe empty value
 }
 
 setup :: UnparsedConfig -> (String -> Response)

@@ -13,8 +13,6 @@
 
 ## Doing
 
-- Use Symbol for Instantly/Forever
-- Return `null` instead of empty strings from Main
 
 ## Done
 
@@ -43,3 +41,5 @@
     > Should handle Infinity and Instant results somehow
     * [x] Instant
     * [x] Infinity
+- Use Symbol for Instantly/Forever
+- Return `null` instead of empty strings from Main

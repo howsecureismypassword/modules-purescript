@@ -13,7 +13,7 @@ import Test.NamedNumber as NamedNumber
 import Test.Calculator as Calculator
 import Test.Utility as Utility
 
-import Main (UnparsedConfig, Response, setup)
+import Main (UnparsedConfig, Response, setup, forever, instantly, empty)
 import Period (Period)
 
 foreign import config :: UnparsedConfig
@@ -36,21 +36,21 @@ main = run [consoleReporter] do
                 time: "42 minutes"
               , level: "warning"
               , checks: [
-                     { id: "just.alphanumeric", level: "warning", value: "" }
-                   , { id: "length.short", level: "warning", value: "" }
-                   , { id: "no.symbols", level: "notice", value: "" }
+                     { id: "just.alphanumeric", level: "warning", value: empty }
+                   , { id: "length.short", level: "warning", value: empty }
+                   , { id: "no.symbols", level: "notice", value: empty }
                 ]
             }
 
         it "shows instant for insecure passwords" do
             setup config "password1" `shouldEqual` {
-                time: "instantly"
+                time: instantly
               , level: "insecure"
               , checks: [
                      { id: "common", level: "insecure", value: "621" }
-                   , { id: "just.alphanumeric", level: "warning", value: "" }
-                   , { id: "length.short", level: "warning", value: "" }
-                   , { id: "no.symbols", level: "notice", value: "" }
+                   , { id: "just.alphanumeric", level: "warning", value: empty }
+                   , { id: "length.short", level: "warning", value: empty }
+                   , { id: "no.symbols", level: "notice", value: empty }
                 ]
             }
 
@@ -67,9 +67,9 @@ main = run [consoleReporter] do
                 dictionary: config.dictionary,
                 patterns: config.patterns
             } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
-                time: "forever"
+                time: forever
               , level: "achievement"
-              , checks: [{ id: "length.long", level: "achievement", value: "" }]
+              , checks: [{ id: "length.long", level: "achievement", value: empty }]
             }
 
 
