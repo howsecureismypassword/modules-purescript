@@ -2837,4 +2837,4 @@ var PS = {};
   exports["empty"] = $foreign.empty;
 })(PS["Main"] = PS["Main"] || {});
 
-module.exports = PS.Main.setup
+module.exports = PS.Main
