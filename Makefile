@@ -2,10 +2,7 @@
 
 all: dist/build.js dist/build.min.js
 
-output/%.js:
-	pulp build
-
-dist/build.js: output/Calculator/index.js output/Checker/index.js output/Main/index.js output/NamedNumber/index.js output/Period/index.js output/Utility/index.js output/Checks.Dictionary/index.js output/Checks.Pattern/index.js output/Checks.Patterns/index.js
+dist/build.js: $(shell find src -type f)
 	pulp build --skip-entry-point -t dist/build.js
 	echo "\n\nmodule.exports = PS.Main.setup" >> dist/build.js
 
