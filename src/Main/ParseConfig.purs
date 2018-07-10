@@ -3,13 +3,12 @@ module Main.ParseConfig where
 import Prelude (($), (>>=), (<<<), bind, pure, identity)
 import Data.Either (Either, note, either)
 import Data.List.NonEmpty (cons, fromFoldable)
+import Effect.Exception.Unsafe (unsafeThrow)
 
 import Calculator (Calculation, UnparsedCharacterSet, calculate, parseArray)
 import NamedNumber (NamedNumberCalc, NamedNumber, namedNumber)
 import Period (PeriodCalc, Period, period)
 import Checker (Checker, MessageInput, Pattern, check, parseMessages, checkPatterns, checkDictionary)
-
-foreign import unsafeThrow :: String -> ParsedConfig
 
 -- unparsed config
 type CheckConfig = {

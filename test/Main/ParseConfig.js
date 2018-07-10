@@ -27,7 +27,7 @@ var catchError = function (fn) {
         try {
             fn(arg);
         } catch (e) {
-            return e;
+            return e.message;
         }
 
         return "";

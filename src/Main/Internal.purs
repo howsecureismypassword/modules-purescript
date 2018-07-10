@@ -23,12 +23,7 @@ type Response = {
 }
 
 main :: ParsedConfig -> String -> Response
-main { functions, variables } password =
-    {
-        time: time
-      , level: toNullable highestLevel
-      , checks: checkResults
-    }
+main { functions, variables } password = { time: time , level: toNullable highestLevel , checks: checkResults }
 
     where checks = functions.check password
           calculations = functions.calculate password
