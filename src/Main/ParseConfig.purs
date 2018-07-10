@@ -1,7 +1,7 @@
 module Main.ParseConfig where
 
-import Prelude (($), (>>=), bind, pure)
-import Data.Either (Either(..), note)
+import Prelude (($), (>>=), (<<<), bind, pure, identity)
+import Data.Either (Either, note, either)
 import Data.List.NonEmpty (cons, fromFoldable)
 
 import Calculator (Calculation, UnparsedCharacterSet, calculate, parseArray)
@@ -11,6 +11,7 @@ import Checker (Checker, MessageInput, Pattern, check, parseMessages, checkPatte
 
 foreign import unsafeThrow :: String -> ParsedConfig
 
+-- unparsed config
 type CheckConfig = {
     dictionary :: Array String
   , patterns :: Array Pattern
@@ -35,40 +36,51 @@ type UnparsedConfig = {
   , checks :: CheckConfig
 }
 
-type ParsedConfig = {
+-- parsed config
+type FunctionsConfig = {
+    calculate :: Calculation
+  , period :: PeriodCalc
+  , namedNumber :: NamedNumberCalc
+  , check :: Checker
+}
+
+type VariablesConfig = {
     calcs :: Number
-  , calculate' :: Calculation
-  , period' :: PeriodCalc
-  , namedNumber' :: NamedNumberCalc
-  , check' :: Checker
   , forever :: String
   , instantly :: String
 }
 
-parseConfig :: UnparsedConfig -> ParsedConfig
-parseConfig config = case parseConfig' config of
-     Left error -> unsafeThrow error
-     Right config' -> config'
+type ParsedConfig = {
+    functions :: FunctionsConfig
+  , variables :: VariablesConfig
+}
 
-parseConfig' :: UnparsedConfig -> Either String ParsedConfig
-parseConfig' { calculation, time, checks } = do
+parseConfig :: UnparsedConfig -> ParsedConfig
+parseConfig = either unsafeThrow identity <<< parse
+
+parse :: UnparsedConfig -> Either String ParsedConfig
+parse { calculation, time, checks } = do
     -- dictionaries
-    periods' <- note "Invalid periods dictionary" (fromFoldable time.periods)
-    namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable time.namedNumbers)
-    characterSets' <- note "Invalid character sets dictionary" (parseArray calculation.characterSets)
+    periods <- note "Invalid periods dictionary" (fromFoldable time.periods)
+    namedNumbers <- note "Invalid named numbers dictionary" (fromFoldable time.namedNumbers)
+    characterSets <- note "Invalid character sets dictionary" (parseArray calculation.characterSets)
 
     -- checks
-    dic' <- note "Invalid password dictionary" (fromFoldable checks.dictionary)
-    patterns' <- note "Invalid patterns dictionary" (fromFoldable checks.patterns >>= checkPatterns)
+    dictionary <- note "Invalid password dictionary" (fromFoldable checks.dictionary)
+    patterns <- note "Invalid patterns dictionary" (fromFoldable checks.patterns >>= checkPatterns)
 
     let messages = parseMessages checks.messages
 
     pure $ {
-        calcs: calculation.calcs
-      , calculate': calculate characterSets'
-      , period': period periods'
-      , namedNumber': namedNumber namedNumbers'
-      , check': check (checkDictionary dic' `cons` patterns') messages
-      , forever: time.forever
-      , instantly: time.instantly
+        functions: {
+            calculate: calculate characterSets
+          , period: period periods
+          , namedNumber: namedNumber namedNumbers
+          , check: check (checkDictionary dictionary `cons` patterns) messages
+        }
+      , variables: {
+            calcs: calculation.calcs
+          , forever: time.forever
+          , instantly: time.instantly
+        }
     }
