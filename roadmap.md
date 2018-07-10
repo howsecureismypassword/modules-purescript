@@ -1,7 +1,5 @@
 ## Refactor
 
-- Tidy up Main
-    * [ ] Move bits into other modules?
 
 ## Bugs
 
@@ -13,10 +11,8 @@
 
 ## Doing
 
-- Should accept values for "Forever"/"Instantly"
-    * [ ] Add config
-    * [ ] Remove Constant stuff
-- Use Internal modules to separate testing entry points
+- Tidy up Main
+    * [ ] Move bits into other modules?
 
 ## Done
 
@@ -48,3 +44,7 @@
 - Use Symbol for Instantly/Forever
 - Return `null` instead of empty strings from Main
 - Should accept Checks dictionary and output message properly
+- Should accept values for "Forever"/"Instantly"
+    * [x] Add config
+    * [x] Remove Constant stuff
+- Use Internal modules to separate testing entry points

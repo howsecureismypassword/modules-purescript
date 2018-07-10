@@ -1,8 +1,12 @@
 exports.config = {
     calcs: 40e9,
-    periods: require("../../dictionaries/periods"),
-    namedNumbers: require("../../dictionaries/named-numbers"),
     characterSets: require("../../dictionaries/character-sets"),
+    time: {
+        periods: require("../../dictionaries/periods"),
+        namedNumbers: require("../../dictionaries/named-numbers"),
+        forever: "Forever",
+        instantly: "Instantly",
+    },
     checks: {
         dictionary: require("../../dictionaries/top10k"),
         patterns: require("../../dictionaries/patterns"),

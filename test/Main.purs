@@ -59,7 +59,7 @@ main = run [consoleReporter] do
         it "shows instant for insecure passwords" do
             parseConfig config "password1" `shouldEqual` {
                 level: toNullable (Just "insecure"),
-                time: "instantly",
+                time: "Instantly",
                 checks: [
                     {
                         level: "insecure",
@@ -87,17 +87,21 @@ main = run [consoleReporter] do
         it "shows forever for secure passwords" do
             parseConfig {
                 calcs: config.calcs,
-                periods: [{
-                    singular: "blahtosecond",
-                    plural: "blahtoseconds",
-                    seconds: 0.1
-                }],
-                namedNumbers: config.namedNumbers,
+                time: {
+                    periods: [{
+                        singular: "blahtosecond",
+                        plural: "blahtoseconds",
+                        seconds: 0.1
+                    }],
+                    namedNumbers: config.time.namedNumbers,
+                    forever: config.time.forever,
+                    instantly: config.time.instantly
+                },
                 characterSets: config.characterSets,
                 checks: config.checks
             } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
                 level: toNullable (Just "achievement"),
-                time: "forever",
+                time: "Forever",
                 checks: [{
                     level: "achievement",
                     message: "Your password is over sixteen characters long.",
@@ -109,32 +113,38 @@ main = run [consoleReporter] do
         it "throws parsing errors" do
            catchSetupError parseConfig {
                calcs: config.calcs,
-               periods: [],
-               namedNumbers: config.namedNumbers,
+               time: {
+                   periods: [],
+                   namedNumbers: config.time.namedNumbers,
+                   forever: config.time.forever,
+                   instantly: config.time.instantly
+               },
                characterSets: config.characterSets,
                checks: config.checks
            } `shouldEqual` "Invalid periods dictionary"
 
            catchSetupError parseConfig {
                calcs: config.calcs,
-               periods: config.periods,
-               namedNumbers: [],
+               time: {
+                   periods: config.time.periods,
+                   namedNumbers: [],
+                   forever: config.time.forever,
+                   instantly: config.time.instantly
+               },
                characterSets: config.characterSets,
                checks: config.checks
            } `shouldEqual` "Invalid named numbers dictionary"
 
            catchSetupError parseConfig {
                calcs: config.calcs,
-               periods: config.periods,
-               namedNumbers: config.namedNumbers,
+               time: config.time,
                characterSets: [],
                checks: config.checks
            } `shouldEqual` "Invalid character sets dictionary"
 
            catchSetupError parseConfig {
                calcs: config.calcs,
-               periods: config.periods,
-               namedNumbers: config.namedNumbers,
+               time: config.time,
                characterSets: config.characterSets,
                checks: {
                    dictionary: [],
@@ -145,8 +155,7 @@ main = run [consoleReporter] do
 
            catchSetupError parseConfig {
                calcs: config.calcs,
-               periods: config.periods,
-               namedNumbers: config.namedNumbers,
+               time: config.time,
                characterSets: config.characterSets,
                checks: {
                    dictionary: config.checks.dictionary,

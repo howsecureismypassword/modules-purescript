@@ -22,11 +22,17 @@ type CheckConfig = {
   , messages :: Array MessageInput
 }
 
+type TimeConfig = {
+    periods :: Array Period
+  , namedNumbers :: Array NamedNumber
+  , forever :: String
+  , instantly :: String
+}
+
 type UnparsedConfig = {
     calcs :: Number
-  , periods :: Array Period
-  , namedNumbers :: Array NamedNumber
   , characterSets :: Array UnparsedCharacterSet
+  , time :: TimeConfig
   , checks :: CheckConfig
 }
 
@@ -36,6 +42,8 @@ type ParsedConfig = {
   , period' :: PeriodCalc
   , namedNumber' :: NamedNumberCalc
   , check' :: Checker
+  , forever :: String
+  , instantly :: String
 }
 
 type JSResult = {
@@ -51,7 +59,7 @@ type Response = {
 }
 
 main :: ParsedConfig -> String -> Response
-main { calcs, calculate', period', namedNumber', check' } password =
+main { calcs, calculate', period', namedNumber', check', forever, instantly } password =
     {
         time: time
       , level: toNullable highestLevel
@@ -62,14 +70,14 @@ main { calcs, calculate', period', namedNumber', check' } password =
           highestLevel = ((_.level) <$> Array.head checkResults)
 
           time = case highestLevel of
-                     Just "insecure" -> "instantly"
-                     _ -> parseTime namedNumber' period' calcs (calculate' password)
+                     Just "insecure" -> instantly
+                     _ -> parseTime forever namedNumber' period' calcs (calculate' password)
 
 
-parseTime :: NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
-parseTime namedNumber' period' calcs possibilities =
+parseTime :: String -> NamedNumberCalc -> PeriodCalc -> Number -> BigInt -> String
+parseTime forever namedNumber' period' calcs possibilities =
     case period' calcs possibilities of
-        Nothing -> "forever"
+        Nothing -> forever
         Just { value, name } -> joinWith " " [(namedNumber' value), name]
 
 checksToJS :: Result -> JSResult
@@ -87,10 +95,10 @@ parseConfig config = case parseConfig' config of
      Right main' -> main'
 
 parseConfig' :: UnparsedConfig -> Either String (String -> Response)
-parseConfig' { calcs, periods, namedNumbers, characterSets, checks } = do
+parseConfig' { calcs, characterSets, time, checks } = do
     -- dictionaries
-    periods' <- note "Invalid periods dictionary" (fromFoldable periods)
-    namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable namedNumbers)
+    periods' <- note "Invalid periods dictionary" (fromFoldable time.periods)
+    namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable time.namedNumbers)
     characterSets' <- note "Invalid character sets dictionary" (parseArray characterSets)
 
     -- checks
@@ -105,4 +113,6 @@ parseConfig' { calcs, periods, namedNumbers, characterSets, checks } = do
       , period': period periods'
       , namedNumber': namedNumber namedNumbers'
       , check': check (checkDictionary dic' `cons` patterns') messages
+      , forever: time.forever
+      , instantly: time.instantly
     }

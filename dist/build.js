@@ -3292,18 +3292,20 @@ var PS = {};
   var Period = PS["Period"];
   var Period_Internal = PS["Period.Internal"];
   var Prelude = PS["Prelude"];                 
-  var parseTime = function (namedNumber$prime) {
-      return function (period$prime) {
-          return function (calcs) {
-              return function (possibilities) {
-                  var v = period$prime(calcs)(possibilities);
-                  if (v instanceof Data_Maybe.Nothing) {
-                      return "forever";
+  var parseTime = function (forever) {
+      return function (namedNumber$prime) {
+          return function (period$prime) {
+              return function (calcs) {
+                  return function (possibilities) {
+                      var v = period$prime(calcs)(possibilities);
+                      if (v instanceof Data_Maybe.Nothing) {
+                          return forever;
+                      };
+                      if (v instanceof Data_Maybe.Just) {
+                          return Data_String_Common.joinWith(" ")([ namedNumber$prime(v.value0.value), v.value0.name ]);
+                      };
+                      throw new Error("Failed pattern match at Main.Internal line 79, column 5 - line 81, column 74: " + [ v.constructor.name ]);
                   };
-                  if (v instanceof Data_Maybe.Just) {
-                      return Data_String_Common.joinWith(" ")([ namedNumber$prime(v.value0.value), v.value0.name ]);
-                  };
-                  throw new Error("Failed pattern match at Main.Internal line 71, column 5 - line 73, column 74: " + [ v.constructor.name ]);
               };
           };
       };
@@ -3325,9 +3327,9 @@ var PS = {};
           })(Data_Array.head(checkResults));
           var time = (function () {
               if (highestLevel instanceof Data_Maybe.Just && highestLevel.value0 === "insecure") {
-                  return "instantly";
+                  return v.instantly;
               };
-              return parseTime(v["namedNumber'"])(v["period'"])(v.calcs)(v["calculate'"](password));
+              return parseTime(v.forever)(v["namedNumber'"])(v["period'"])(v.calcs)(v["calculate'"](password));
           })();
           return {
               time: time,
@@ -3337,8 +3339,8 @@ var PS = {};
       };
   };
   var parseConfig$prime = function (v) {
-      return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid periods dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.periods)))(function (v1) {
-          return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid named numbers dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.namedNumbers)))(function (v2) {
+      return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid periods dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.time.periods)))(function (v1) {
+          return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid named numbers dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.time.namedNumbers)))(function (v2) {
               return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid character sets dictionary")(Calculator_Internal.parseArray(v.characterSets)))(function (v3) {
                   return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid password dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.checks.dictionary)))(function (v4) {
                       return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid patterns dictionary")(Control_Bind.bind(Data_Maybe.bindMaybe)(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.checks.patterns))(Checker_Checks_Patterns.checkPatterns)))(function (v5) {
@@ -3348,7 +3350,9 @@ var PS = {};
                               "calculate'": Calculator_Internal.calculate(v3),
                               "period'": Period_Internal.period(v1),
                               "namedNumber'": NamedNumber_Internal.namedNumber(v2),
-                              "check'": Checker_Internal.check(Data_List_NonEmpty.cons(Checker_Checks_Dictionary.checkDictionary(v4))(v5))(messages)
+                              "check'": Checker_Internal.check(Data_List_NonEmpty.cons(Checker_Checks_Dictionary.checkDictionary(v4))(v5))(messages),
+                              forever: v.time.forever,
+                              instantly: v.time.instantly
                           }));
                       });
                   });
@@ -3364,7 +3368,7 @@ var PS = {};
       if (v instanceof Data_Either.Right) {
           return v.value0;
       };
-      throw new Error("Failed pattern match at Main.Internal line 85, column 22 - line 87, column 26: " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Main.Internal line 93, column 22 - line 95, column 26: " + [ v.constructor.name ]);
   };
   exports["main"] = main;
   exports["parseTime"] = parseTime;
