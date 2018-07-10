@@ -1,4 +1,4 @@
-module Checks.Pattern where
+module Checker.Checks.Pattern where
 
 import Prelude (($), bind)
 import Data.Maybe (Maybe(..))
@@ -6,7 +6,7 @@ import Data.Either (hush)
 import Data.String.Regex (regex, test)
 import Data.String.Regex.Flags (noFlags)
 
-import Checker (Check, CheckResult, Level)
+import Checker.Internal (Check, CheckResult, Level)
 
 result :: String -> Level -> CheckResult
 result id level = {
@@ -15,8 +15,8 @@ result id level = {
   , value: Nothing
 }
 
-check :: String -> Level -> String -> Check
-check id level regexString password = do
+checkPattern :: String -> Level -> String -> Check
+checkPattern id level regexString password = do
     rgex <- hush $ regex regexString noFlags
 
     if test rgex password

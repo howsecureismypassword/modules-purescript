@@ -1,10 +1,10 @@
-module Checks.Dictionary where
+module Checker.Checks.Dictionary where
 
 import Prelude ((<$>), (+), show)
 import Data.List.NonEmpty (NonEmptyList, elemIndex)
 import Data.Maybe (Maybe(Just))
 
-import Checker (Check, CheckResult, Level(Insecure))
+import Checker.Internal (Check, CheckResult, Level(Insecure))
 
 result :: Int -> CheckResult
 result index = {
@@ -13,5 +13,5 @@ result index = {
   , value: Just (show (index + 1))
 }
 
-check :: NonEmptyList String -> Check
-check dictionary password = result <$> elemIndex password dictionary
+checkDictionary :: NonEmptyList String -> Check
+checkDictionary dic password = result <$> elemIndex password dic

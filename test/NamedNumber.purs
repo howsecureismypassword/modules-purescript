@@ -10,7 +10,7 @@ import Data.List.NonEmpty (fromFoldable)
 import Test.Helper (unsafeFromMaybe)
 
 -- tested modules
-import NamedNumber (NamedNumber, namedNumber)
+import NamedNumber.Internal (NamedNumber, namedNumber)
 
 -- dictionaries
 foreign import namedNumbers :: Array NamedNumber

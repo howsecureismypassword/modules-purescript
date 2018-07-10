@@ -13,7 +13,7 @@ import Test.NamedNumber as NamedNumber
 import Test.Calculator as Calculator
 import Test.Utility as Utility
 
-import Main (UnparsedConfig, Response, setup)
+import Main.Internal (UnparsedConfig, Response, parseConfig)
 import Period (Period)
 import Data.Nullable (toNullable)
 import Data.Maybe (Maybe(Just))
@@ -32,9 +32,9 @@ main = run [consoleReporter] do
     Period.checks
     Utility.checks
 
-    describe "Main (setup)" do
+    describe "Main (parseConfig)" do
         it "parses config" do
-            setup config "uekdjeis1" `shouldEqual` {
+            parseConfig config "uekdjeis1" `shouldEqual` {
                 level: toNullable (Just "warning"),
                 time: "42 minutes",
                 checks: [
@@ -57,7 +57,7 @@ main = run [consoleReporter] do
             }
 
         it "shows instant for insecure passwords" do
-            setup config "password1" `shouldEqual` {
+            parseConfig config "password1" `shouldEqual` {
                 level: toNullable (Just "insecure"),
                 time: "instantly",
                 checks: [
@@ -85,7 +85,7 @@ main = run [consoleReporter] do
             }
 
         it "shows forever for secure passwords" do
-            setup {
+            parseConfig {
                 calcs: config.calcs,
                 periods: [{
                     singular: "blahtosecond",
@@ -109,7 +109,7 @@ main = run [consoleReporter] do
 
 
         it "throws parsing errors" do
-           catchSetupError setup {
+           catchSetupError parseConfig {
                calcs: config.calcs,
                periods: [],
                namedNumbers: config.namedNumbers,
@@ -119,7 +119,7 @@ main = run [consoleReporter] do
                checkMessages: config.checkMessages
            } `shouldEqual` "Invalid periods dictionary"
 
-           catchSetupError setup {
+           catchSetupError parseConfig {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: [],
@@ -129,7 +129,7 @@ main = run [consoleReporter] do
                checkMessages: config.checkMessages
            } `shouldEqual` "Invalid named numbers dictionary"
 
-           catchSetupError setup {
+           catchSetupError parseConfig {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,
@@ -139,7 +139,7 @@ main = run [consoleReporter] do
                checkMessages: config.checkMessages
            } `shouldEqual` "Invalid character sets dictionary"
 
-           catchSetupError setup {
+           catchSetupError parseConfig {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,
@@ -149,7 +149,7 @@ main = run [consoleReporter] do
                checkMessages: config.checkMessages
            } `shouldEqual` "Invalid password dictionary"
 
-           catchSetupError setup {
+           catchSetupError parseConfig {
                calcs: config.calcs,
                periods: config.periods,
                namedNumbers: config.namedNumbers,

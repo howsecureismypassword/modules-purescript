@@ -16,6 +16,7 @@
 - Should accept values for "Forever"/"Instantly"
     * [ ] Add config
     * [ ] Remove Constant stuff
+- Use Internal modules to separate testing entry points
 
 ## Done
 

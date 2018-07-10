@@ -10,7 +10,7 @@ import Data.Maybe (fromMaybe)
 import Data.BigInt (BigInt, fromInt, fromNumber, fromString)
 
 -- tested modules
-import Calculator (UnparsedCharacterSet, calculate, parseArray)
+import Calculator.Internal (UnparsedCharacterSet, calculate, parseArray)
 
 -- dictionaries
 foreign import characterSets :: Array UnparsedCharacterSet

@@ -12,7 +12,7 @@ import Data.BigInt (BigInt, fromInt, fromNumber, pow)
 import Test.Helper (unsafeFromMaybe)
 
 -- tested modules
-import Period (Period, Result, period)
+import Period.Internal (Period, Result, period)
 
 -- dictionaries
 foreign import periods :: Array Period
