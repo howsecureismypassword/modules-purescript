@@ -3303,7 +3303,7 @@ var PS = {};
                   if (v instanceof Data_Maybe.Just) {
                       return Data_String_Common.joinWith(" ")([ namedNumber$prime(v.value0.value), v.value0.name ]);
                   };
-                  throw new Error("Failed pattern match at Main.Internal line 67, column 5 - line 69, column 74: " + [ v.constructor.name ]);
+                  throw new Error("Failed pattern match at Main.Internal line 71, column 5 - line 73, column 74: " + [ v.constructor.name ]);
               };
           };
       };
@@ -3340,9 +3340,9 @@ var PS = {};
       return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid periods dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.periods)))(function (v1) {
           return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid named numbers dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.namedNumbers)))(function (v2) {
               return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid character sets dictionary")(Calculator_Internal.parseArray(v.characterSets)))(function (v3) {
-                  return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid password dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.dictionary)))(function (v4) {
-                      return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid patterns dictionary")(Control_Bind.bind(Data_Maybe.bindMaybe)(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.patterns))(Checker_Checks_Patterns.checkPatterns)))(function (v5) {
-                          var messages = Checker_Internal.parseMessages(v.checkMessages);
+                  return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid password dictionary")(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.checks.dictionary)))(function (v4) {
+                      return Control_Bind.bind(Data_Either.bindEither)(Data_Either.note("Invalid patterns dictionary")(Control_Bind.bind(Data_Maybe.bindMaybe)(Data_List_NonEmpty.fromFoldable(Data_Foldable.foldableArray)(v.checks.patterns))(Checker_Checks_Patterns.checkPatterns)))(function (v5) {
+                          var messages = Checker_Internal.parseMessages(v.checks.messages);
                           return Control_Applicative.pure(Data_Either.applicativeEither)(main({
                               calcs: v.calcs,
                               "calculate'": Calculator_Internal.calculate(v3),
@@ -3364,7 +3364,7 @@ var PS = {};
       if (v instanceof Data_Either.Right) {
           return v.value0;
       };
-      throw new Error("Failed pattern match at Main.Internal line 79, column 22 - line 81, column 26: " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Main.Internal line 85, column 22 - line 87, column 26: " + [ v.constructor.name ]);
   };
   exports["main"] = main;
   exports["parseTime"] = parseTime;

@@ -94,9 +94,7 @@ main = run [consoleReporter] do
                 }],
                 namedNumbers: config.namedNumbers,
                 characterSets: config.characterSets,
-                dictionary: config.dictionary,
-                patterns: config.patterns,
-                checkMessages: config.checkMessages
+                checks: config.checks
             } "aVeryLong47&83**AndComplicated(8347)PasswordThatN0OneCouldEverGuess" `shouldEqual` {
                 level: toNullable (Just "achievement"),
                 time: "forever",
@@ -114,9 +112,7 @@ main = run [consoleReporter] do
                periods: [],
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
-               dictionary: config.dictionary,
-               patterns: config.patterns,
-               checkMessages: config.checkMessages
+               checks: config.checks
            } `shouldEqual` "Invalid periods dictionary"
 
            catchSetupError parseConfig {
@@ -124,9 +120,7 @@ main = run [consoleReporter] do
                periods: config.periods,
                namedNumbers: [],
                characterSets: config.characterSets,
-               dictionary: config.dictionary,
-               patterns: config.patterns,
-               checkMessages: config.checkMessages
+               checks: config.checks
            } `shouldEqual` "Invalid named numbers dictionary"
 
            catchSetupError parseConfig {
@@ -134,9 +128,7 @@ main = run [consoleReporter] do
                periods: config.periods,
                namedNumbers: config.namedNumbers,
                characterSets: [],
-               dictionary: config.dictionary,
-               patterns: config.patterns,
-               checkMessages: config.checkMessages
+               checks: config.checks
            } `shouldEqual` "Invalid character sets dictionary"
 
            catchSetupError parseConfig {
@@ -144,9 +136,11 @@ main = run [consoleReporter] do
                periods: config.periods,
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
-               dictionary: [],
-               patterns: config.patterns,
-               checkMessages: config.checkMessages
+               checks: {
+                   dictionary: [],
+                   patterns: config.checks.patterns,
+                   messages: config.checks.messages
+               }
            } `shouldEqual` "Invalid password dictionary"
 
            catchSetupError parseConfig {
@@ -154,7 +148,9 @@ main = run [consoleReporter] do
                periods: config.periods,
                namedNumbers: config.namedNumbers,
                characterSets: config.characterSets,
-               dictionary: config.dictionary,
-               patterns: [],
-               checkMessages: config.checkMessages
+               checks: {
+                   dictionary: config.checks.dictionary,
+                   patterns: [],
+                   messages: config.checks.messages
+               }
            } `shouldEqual` "Invalid patterns dictionary"

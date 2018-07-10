@@ -16,14 +16,18 @@ import Checker (Checker, Result, MessageInput, Pattern, check, parseMessages, ch
 
 foreign import unsafeThrow :: String -> (String -> Response)
 
+type CheckConfig = {
+    dictionary :: Array String
+  , patterns :: Array Pattern
+  , messages :: Array MessageInput
+}
+
 type UnparsedConfig = {
     calcs :: Number
   , periods :: Array Period
   , namedNumbers :: Array NamedNumber
   , characterSets :: Array UnparsedCharacterSet
-  , dictionary :: Array String
-  , patterns :: Array Pattern
-  , checkMessages :: Array MessageInput
+  , checks :: CheckConfig
 }
 
 type ParsedConfig = {
@@ -83,17 +87,17 @@ parseConfig config = case parseConfig' config of
      Right main' -> main'
 
 parseConfig' :: UnparsedConfig -> Either String (String -> Response)
-parseConfig' { calcs, periods, namedNumbers, characterSets, dictionary, patterns, checkMessages } = do
+parseConfig' { calcs, periods, namedNumbers, characterSets, checks } = do
     -- dictionaries
     periods' <- note "Invalid periods dictionary" (fromFoldable periods)
     namedNumbers' <- note "Invalid named numbers dictionary" (fromFoldable namedNumbers)
     characterSets' <- note "Invalid character sets dictionary" (parseArray characterSets)
 
     -- checks
-    dic' <- note "Invalid password dictionary" (fromFoldable dictionary)
-    patterns' <- note "Invalid patterns dictionary" (fromFoldable patterns >>= checkPatterns)
+    dic' <- note "Invalid password dictionary" (fromFoldable checks.dictionary)
+    patterns' <- note "Invalid patterns dictionary" (fromFoldable checks.patterns >>= checkPatterns)
 
-    let messages = parseMessages checkMessages
+    let messages = parseMessages checks.messages
 
     pure $ main {
         calcs
