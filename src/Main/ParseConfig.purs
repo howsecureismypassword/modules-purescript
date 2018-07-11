@@ -1,6 +1,7 @@
 module Main.ParseConfig where
 
-import Prelude (($), (>>=), (<<<), bind, pure, identity)
+import Prelude (($), (>>=), (<<<), (<>), bind, pure, identity)
+import Data.Maybe (Maybe)
 import Data.Either (Either, note, either)
 import Data.List.NonEmpty (cons, fromFoldable)
 import Effect.Exception.Unsafe (unsafeThrow)
@@ -57,16 +58,19 @@ type ParsedConfig = {
 parseConfig :: UnparsedConfig -> ParsedConfig
 parseConfig = either unsafeThrow identity <<< parse
 
+invalid :: forall a. String -> Maybe a -> Either String a
+invalid name = note ("Invalid " <> name <> " dictionary")
+
 parse :: UnparsedConfig -> Either String ParsedConfig
 parse { calculation, time, checks } = do
     -- dictionaries
-    periods <- note "Invalid periods dictionary" (fromFoldable time.periods)
-    namedNumbers <- note "Invalid named numbers dictionary" (fromFoldable time.namedNumbers)
-    characterSets <- note "Invalid character sets dictionary" (parseArray calculation.characterSets)
+    periods <- invalid "periods" (fromFoldable time.periods)
+    namedNumbers <- invalid "named numbers" (fromFoldable time.namedNumbers)
+    characterSets <- invalid "character sets" (parseArray calculation.characterSets)
 
     -- checks
-    dictionary <- note "Invalid password dictionary" (fromFoldable checks.dictionary)
-    patterns <- note "Invalid patterns dictionary" (fromFoldable checks.patterns >>= checkPatterns)
+    dictionary <- invalid "password" (fromFoldable checks.dictionary)
+    patterns <- invalid "patterns" (fromFoldable checks.patterns >>= checkPatterns)
 
     let messages = parseMessages checks.messages
 

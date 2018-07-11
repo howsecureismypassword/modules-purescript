@@ -11,10 +11,6 @@
 
 ## Doing
 
-- Tidy up Main
-    * [ ] ParseConfig module
-    * [ ] Output module
-    * [ ] Calculations config
 
 ## Done
 
@@ -50,3 +46,6 @@
     * [x] Add config
     * [x] Remove Constant stuff
 - Use Internal modules to separate testing entry points
+- Tidy up Main
+    * [x] ParseConfig module
+    * [x] Calculations config

@@ -7,7 +7,6 @@ import Data.Array (fromFoldable, sortWith, head)
 import Data.Nullable (Nullable(), toNullable)
 
 import Checker (Result)
-
 import Main.ParseConfig (ParsedConfig)
 
 type JSResult = {
@@ -23,7 +22,9 @@ type Response = {
 }
 
 main :: ParsedConfig -> String -> Response
-main { functions, variables } password = { time: time , level: toNullable highestLevel , checks: checkResults }
+main { functions, variables } password =
+
+    { time: time, level: toNullable highestLevel, checks: checkResults }
 
     where checks = functions.check password
           calculations = functions.calculate password
