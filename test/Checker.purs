@@ -48,7 +48,7 @@ checks = describe "Checks (checks)" do
         check' "password" `shouldEqual` List.fromFoldable [{
             id: "common",
             level: Insecure,
-            value: Just "1"
+            value: Just "10"
         }, {
             id: "length.short",
             level: Warning,
@@ -58,13 +58,13 @@ checks = describe "Checks (checks)" do
         check' "qwerty" `shouldEqual` List.fromFoldable [{
             id: "common",
             level: Insecure,
-            value: Just "5"
+            value: Just "10"
         }]
 
         check10k "gocats" `shouldEqual` List.fromFoldable [{
             id: "common",
             level: Insecure,
-            value: Just "9918"
+            value: Just "9920"
         }]
 
         check' "abcd1234" `shouldEqual` List.fromFoldable [{
