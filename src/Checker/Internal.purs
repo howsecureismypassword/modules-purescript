@@ -8,25 +8,23 @@ import Data.Maybe (Maybe(..))
 import Data.Map (Map, fromFoldable, lookup)
 import Data.Tuple (Tuple(Tuple))
 
-data Level = Insecure | Warning | EasterEgg | Notice | Achievement | Highlight
+data Level = Insecure | Warning | EasterEgg | Notice | Achievement
 derive instance eqLevel :: Eq Level
 derive instance ordLevel :: Ord Level
 
 instance showLevel :: Show Level where
-    show Highlight = "highlight"
     show Insecure = "insecure"
     show Warning = "warning"
-    show Achievement = "achievement"
+    show EasterEgg = "easter-egg"
     show Notice = "notice"
-    show EasterEgg = "easterEgg"
+    show Achievement = "achievement"
 
 read :: String -> Maybe Level
-read "highlight" = Just Highlight
 read "insecure" = Just Insecure
 read "warning" = Just Warning
-read "achievement" = Just Achievement
+read "easter-egg" = Just EasterEgg
 read "notice" = Just Notice
-read "easterEgg" = Just EasterEgg
+read "achievement" = Just Achievement
 read _ = Nothing
 
 type CheckResult = {

@@ -1,12 +1,12 @@
 [
     {
-        "level": "easterEgg",
+        "level": "easter-egg",
         "id": "xkcd",
         "regex": "^correcthorsebatterystaple$"
     },
 
     {
-        "level": "easterEgg",
+        "level": "easter-egg",
         "id": "jeff",
         "regex": "^jeff|geoff$"
     },
