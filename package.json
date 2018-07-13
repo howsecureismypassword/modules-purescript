@@ -1,7 +1,8 @@
 {
   "name": "hsimp-purescript",
-  "version": "0.1.0",
-  "description": "How Secure Is My Passowrd? written in PureScript",
+  "version": "0.1.1",
+  "description": "How Secure Is My Password? written in PureScript",
+  "keywords": ["hsimp", "password", "security", "meter", "purescript"],
   "main": "dist/build.js",
   "author": "Small Hadron Collider",
   "license": "MIT",
@@ -9,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/howsecureismypassword/modules-purescript.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "big-integer": "^1.6.32"
   }
 }
