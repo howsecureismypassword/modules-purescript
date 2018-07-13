@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/howsecureismypassword/modules-purescript.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "big-integer": "^1.6.32"
   }
 }
