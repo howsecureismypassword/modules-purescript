@@ -12,7 +12,7 @@ import setup from "hsimp-purescript";
 
 // the english version of the dictionaries
 // feel free to use your own dictionaries, just make sure they have the same format
-import charactersSets from "hsimp-purescript/dictionaries/characters-sets";
+import characterSets from "hsimp-purescript/dictionaries/characters-sets";
 import periods from "hsimp-purescript/dictionaries/periods";
 import namedNumbers from "hsimp-purescript/dictionaries/named-numbers";
 import dictionary from "hsimp-purescript/dictionaries/top10k";
@@ -27,7 +27,7 @@ const hsimp = setup({
         calcs: 40e9,
 
         // characters sets to check
-        charactersSets,
+        characterSets,
     },
     time: {
         // a list of how long each period is in seconds
