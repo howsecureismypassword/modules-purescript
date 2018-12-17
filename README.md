@@ -27,7 +27,7 @@ const hsimp = setup({
         calcs: 40e9,
 
         // characters sets to check
-        characterSets,
+        charactersSets,
     },
     time: {
         // a list of how long each period is in seconds
