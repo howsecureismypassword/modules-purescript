@@ -12,5 +12,6 @@
   },
   "dependencies": {
     "big-integer": "^1.6.32"
-  }
+  },
+  "types": "index.d.ts"
 }
