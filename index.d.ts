@@ -15,7 +15,7 @@ type returnFunction = (m: string | number) => IResult;
 interface ICharacterSet {
     name: string;
     matches: string;
-    value: value;
+    value: number;
 }
 
 type CharacterSets = ICharacterSet[];
