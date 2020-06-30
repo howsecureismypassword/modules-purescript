@@ -11,6 +11,9 @@ const hsimp = setup({
         forever: "Forever",
         instantly: "Instantly",
     },
+    output: {
+        namedNumbers: true,
+    },
     checks: {
         dictionary: require("../dictionaries/en-gb/top10k"),
         patterns: require("../dictionaries/en-gb/patterns"),

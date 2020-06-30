@@ -2,6 +2,7 @@
 , dependencies = [
   "spec",
   "nullable",
+  "foreign",
   "bigints"
 ]
 , packages = ./packages.dhall

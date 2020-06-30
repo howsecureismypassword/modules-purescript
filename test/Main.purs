@@ -11,7 +11,7 @@ import Test.Period as Period
 import Test.NamedNumber as NamedNumber
 import Test.Calculator as Calculator
 import Test.Utility as Utility
-import Test.Main.ParseConfig as ParseConfig
+import Test.Config.Parser as Config
 
 -- tests
 main :: Effect Unit
@@ -21,4 +21,4 @@ main = launchAff_ $ runSpec [consoleReporter] do
     NamedNumber.checks
     Period.checks
     Utility.checks
-    ParseConfig.checks
+    Config.checks
