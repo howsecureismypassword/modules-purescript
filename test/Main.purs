@@ -1,9 +1,10 @@
 module Test.Main where
 
-import Prelude (Unit, discard)
+import Prelude (Unit, discard, ($))
 import Effect (Effect)
+import Effect.Aff (launchAff_)
 import Test.Spec.Reporter.Console (consoleReporter)
-import Test.Spec.Runner (run)
+import Test.Spec.Runner (runSpec)
 
 import Test.Checker as Checker
 import Test.Period as Period
@@ -14,7 +15,7 @@ import Test.Main.ParseConfig as ParseConfig
 
 -- tests
 main :: Effect Unit
-main = run [consoleReporter] do
+main = launchAff_ $ runSpec [consoleReporter] do
     Calculator.checks
     Checker.checks
     NamedNumber.checks
