@@ -1,6 +1,7 @@
 module Config.Types where
 
 import Data.String.Regex (Regex)
+import Data.List.NonEmpty (NonEmptyList)
 
 -- dictionaries
 type CharacterSet = {
@@ -41,12 +42,12 @@ type Settings = {
 }
 
 type Dictionaries = {
-    characterSets :: Array CharacterSet
-  , periods :: Array Period
-  , namedNumbers :: Array NamedNumber
-  , top :: Array String
-  , patterns :: Array Pattern
-  , checks :: Array Check
+    characterSets :: NonEmptyList CharacterSet
+  , periods :: NonEmptyList Period
+  , namedNumbers :: NonEmptyList NamedNumber
+  , top :: NonEmptyList String
+  , patterns :: NonEmptyList Pattern
+  , checks :: NonEmptyList Check
 }
 
 type Config = {

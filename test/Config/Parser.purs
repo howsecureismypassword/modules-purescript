@@ -5,7 +5,7 @@ import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Foreign (Foreign)
-import Data.Array (length)
+import Data.List.NonEmpty (length)
 import Data.Either (Either(Right), isLeft)
 
 import Config.Parser (parse)

@@ -1,17 +1,27 @@
 module Config.Parser where
 
 import Prelude ((>>=), (<$>), ($), pure, bind, flip)
+
+import Control.Monad.Except (runExcept)
 import Foreign (F, Foreign, ForeignError(ForeignError), MultipleErrors, fail, renderForeignError, readBoolean, readNumber, readString, readInt, readArray)
 import Foreign.Index (readProp)
+
 import Data.Bifunctor (lmap)
-import Data.List.NonEmpty (intercalate)
-import Control.Monad.Except (runExcept)
 import Data.Either (Either(Right, Left))
+import Data.List.NonEmpty (NonEmptyList, intercalate, fromFoldable)
+import Data.Maybe (Maybe(Nothing, Just))
 import Data.String.Regex (regex)
 import Data.String.Regex.Flags (global)
 import Data.Traversable (sequence)
 
 import Config.Types
+
+readNonEmptyList :: Foreign -> F (NonEmptyList Foreign)
+readNonEmptyList f = do
+    arr <- readArray f
+    case fromFoldable arr of
+        Nothing -> fail $ ForeignError "Empty array"
+        Just nel -> pure nel
 
 -- dictionaries
 readPattern :: Foreign -> F Pattern
@@ -52,34 +62,34 @@ readCharacterSet cs = do
          Left _ -> fail $ ForeignError "Invalid regex"
          Right matches -> pure { name, matches, value }
 
-readNamedNumbers :: Foreign -> F (Array NamedNumber)
+readNamedNumbers :: Foreign -> F (NonEmptyList NamedNumber)
 readNamedNumbers config = do
-    namedNumbers <- "time" `readProp` config >>= readProp "namedNumbers" >>= readArray
+    namedNumbers <- "time" `readProp` config >>= readProp "namedNumbers" >>= readNonEmptyList
     sequence $ readNamedNumber <$> namedNumbers
 
-readPeriods :: Foreign -> F (Array Period)
+readPeriods :: Foreign -> F (NonEmptyList Period)
 readPeriods config = do
-    periods <- "time" `readProp` config >>= readProp "periods" >>= readArray
+    periods <- "time" `readProp` config >>= readProp "periods" >>= readNonEmptyList
     sequence $ readPeriod <$> periods
 
-readCharacterSets :: Foreign -> F (Array CharacterSet)
+readCharacterSets :: Foreign -> F (NonEmptyList CharacterSet)
 readCharacterSets config = do
-    characterSets <- "calculation" `readProp` config >>= readProp "characterSets" >>= readArray
+    characterSets <- "calculation" `readProp` config >>= readProp "characterSets" >>= readNonEmptyList
     sequence $ readCharacterSet <$> characterSets
 
-readTop :: Foreign -> F (Array String)
+readTop :: Foreign -> F (NonEmptyList String)
 readTop config = do
-    top <- "checks" `readProp` config >>= readProp "dictionary" >>= readArray
+    top <- "checks" `readProp` config >>= readProp "dictionary" >>= readNonEmptyList
     sequence $ (readString <$> top)
 
-readPatterns :: Foreign -> F (Array Pattern)
+readPatterns :: Foreign -> F (NonEmptyList Pattern)
 readPatterns config = do
-    patterns <- "checks" `readProp` config >>= readProp "patterns" >>= readArray
+    patterns <- "checks" `readProp` config >>= readProp "patterns" >>= readNonEmptyList
     sequence $ readPattern <$> patterns
 
-readChecks :: Foreign -> F (Array Check)
+readChecks :: Foreign -> F (NonEmptyList Check)
 readChecks config = do
-    checks <- "checks" `readProp` config >>= readProp "messages" >>= readArray
+    checks <- "checks" `readProp` config >>= readProp "messages" >>= readNonEmptyList
     sequence $ readCheck <$> checks
 
 -- config
