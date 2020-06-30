@@ -5,7 +5,7 @@ import Data.String (length, splitAt)
 import Data.BigInt (BigInt, toString)
 import Data.List.NonEmpty (head)
 
-import Config.Types (NamedNumber, NamedNumbers)
+import Config.Types (NamedNumbers)
 
 import Utility (findLast)
 

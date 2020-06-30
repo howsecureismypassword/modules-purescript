@@ -1,9 +1,12 @@
 module Utility (
     findLast
   , format
+  , roundTo
 ) where
 
-import Prelude ((=<<), (<<<), not)
+import Prelude ((=<<), (<<<), (+), (*), not)
+
+import Data.Int (quot)
 import Data.List.NonEmpty (NonEmptyList, head, findLastIndex, index)
 import Data.Maybe (fromMaybe)
 
@@ -22,3 +25,7 @@ formatRegex = unsafeRegex "(\\d)(?=(\\d\\d\\d)+(?!\\d))" global
 
 format :: String -> String
 format number = replace formatRegex "$1," number
+
+-- round to
+roundTo :: Int -> Int -> Int
+roundTo to value = 10 * ((value `quot` to) + 1)
