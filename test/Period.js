@@ -1,5 +1,5 @@
 // compiled into output, so need to go up two directories
-const periods = require("../../dictionaries/periods");
+const periods = require("../../dictionaries/en-gb/periods");
 
 exports.dodgyPeriods = [{
     singular: "blahtosecond",

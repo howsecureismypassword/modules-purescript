@@ -1,18 +1,18 @@
 exports.config = {
     calculation: {
         calcs: 40e9,
-        characterSets: require("../../dictionaries/character-sets"),
+        characterSets: require("../../dictionaries/en-gb/character-sets"),
     },
     time: {
-        periods: require("../../dictionaries/periods"),
-        namedNumbers: require("../../dictionaries/named-numbers"),
+        periods: require("../../dictionaries/en-gb/periods"),
+        namedNumbers: require("../../dictionaries/en-gb/named-numbers"),
         forever: "Forever",
         instantly: "Instantly",
     },
     checks: {
-        dictionary: require("../../dictionaries/top10k"),
-        patterns: require("../../dictionaries/patterns"),
-        messages: require("../../dictionaries/checks"),
+        dictionary: require("../../dictionaries/en-gb/top10k"),
+        patterns: require("../../dictionaries/en-gb/patterns"),
+        messages: require("../../dictionaries/en-gb/checks"),
     },
 };
 
