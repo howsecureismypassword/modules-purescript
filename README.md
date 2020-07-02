@@ -10,48 +10,34 @@ Using ES6 modules:
 // import the hsimp-purescript module
 import setup from "hsimp-purescript";
 
-// the english version of the dictionaries
-// feel free to use your own dictionaries, just make sure they have the same format
-import characterSets from "hsimp-purescript/dictionaries/characters-sets";
-import periods from "hsimp-purescript/dictionaries/periods";
-import namedNumbers from "hsimp-purescript/dictionaries/named-numbers";
-import dictionary from "hsimp-purescript/dictionaries/top10k";
-import patterns from "hsimp-purescript/dictionaries/patterns";
-import messages from "hsimp-purescript/dictionaries/checks";
+import language from "hsimp-purescript/language/english";
+import characterSets from "hsimp-purescript/data/character-sets";
+import common from "hsimp-purescript/data/common/top10k";
+import patterns from "hsimp-purescript/data/patterns";
 
 // create the hsimp function
 // if passed valid config, setup will return a function
 const hsimp = setup({
-    calculation: {
-        // the number of calculations per-second
-        calcs: 40e9,
+    // the number of calculations per second a computer can do
+    calculationsPerSecond: 40e9,
 
-        // characters sets to check
-        characterSets,
-    },
-    time: {
-        // a list of how long each period is in seconds
-        periods,
+    // whether to display named numbers
+    namedNumbers: true,
 
-        // a list of named numbers
-        namedNumbers,
+    // a language file
+    language,
 
-        // if the amount of time it will take gets ridiculous, what should be displayed
-        forever: "Forever",
-
-        // if the amount of time is basically immediate, what should be displayed
-        instantly: "Instantly",
-    },
+    // different checks
     checks: {
-        // a list of common passwords
-        dictionary,
+        // character sets to check
+        characterSets,
 
-        // a list of patterns to check
+        // common passwords to check
+        common,
+
+        // patterns to check
         patterns,
-
-        // the messages to display for each check
-        messages,
-    },
+    }
 });
 
 // to run
@@ -95,4 +81,4 @@ There are five levels:
 
 ## Building
 
-To build the code you'll require [`pulp`](https://www.npmjs.com/package/pulp). Then just run `make`.  However, the latest build should always be available in the `dist` directory.
+To build the code you'll require [`spago`](https://github.com/spacchetti/spago). Then just run `make`.  However, the latest build should always be available in the `dist` directory.
