@@ -1,22 +1,24 @@
 const setup = require("./build.min");
 
-const hsimp = setup({
-    calculation: {
-        calcs: 40e9,
-        characterSets: require("../dictionaries/en-gb/character-sets"),
-    },
-    time: {
-        periods: require("../dictionaries/en-gb/periods"),
-        namedNumbers: require("../dictionaries/en-gb/named-numbers"),
-        forever: "Forever",
-        instantly: "Instantly",
-    },
+const config = {
+    calculationsPerSecond: 40e9,
+    namedNumbers: true,
+    language: require("../language/english"),
     checks: {
-        dictionary: require("../dictionaries/en-gb/top10k"),
-        patterns: require("../dictionaries/en-gb/patterns"),
-        messages: require("../dictionaries/en-gb/checks"),
-    },
-});
+        characterSets: require("../data/character-sets"),
+        common: require("../data/common/top10k"),
+        patterns: require("../data/patterns")
+    }
+};
+
+let hsimp = setup(config);
+
+console.log(hsimp("HowSecureIsMyPassword?"));
+console.log(hsimp("password1"));
+console.log(hsimp("ab14&fj8hdj*"));
+
+config.namedNumbers = false;
+hsimp = setup(config);
 
 console.log(hsimp("HowSecureIsMyPassword?"));
 console.log(hsimp("password1"));

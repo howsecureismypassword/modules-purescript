@@ -1,23 +1,20 @@
-module Test.Calculator where
+module Test.Time.Calculator where
 
 import Prelude (Unit, discard)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Test.Helper (unsafeFromMaybe)
-
 import Data.Maybe (fromMaybe)
 import Data.BigInt (BigInt, fromInt, fromNumber, fromString)
 
 -- tested modules
-import Calculator.Internal (UnparsedCharacterSet, calculate, parseArray)
+import Time.Calculator (calculate)
 
--- dictionaries
-foreign import characterSets :: Array UnparsedCharacterSet
+-- test data
+import Test.Data (config)
 
--- helper functions
 calculate' :: String -> BigInt
-calculate' = calculate (unsafeFromMaybe (parseArray characterSets))
+calculate' = calculate (config.dictionaries.characterSets)
 
 -- tests
 checks :: Spec Unit
