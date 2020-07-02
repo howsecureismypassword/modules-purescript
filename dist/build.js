@@ -2314,11 +2314,11 @@ var PS = {};
   var Foreign = $PS["Foreign"];
   var Foreign_Index = $PS["Foreign.Index"];                
   var readSettings = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("calculation")(config))(Foreign_Index.readProp("calcs")))(Foreign.readNumber))(function (calcs) {
-          return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("time")(config))(function (time) {
-              return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("forever")(time))(Foreign.readString))(function (forever) {
-                  return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("instantly")(time))(Foreign.readString))(function (instantly) {
-                      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("output")(config))(Foreign_Index.readProp("namedNumbers")))(Foreign.readBoolean))(function (namedNumbers) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("calculationsPerSecond")(config))(Foreign.readNumber))(function (calcs) {
+          return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("namedNumbers")(config))(Foreign.readBoolean))(function (namedNumbers) {
+              return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("language")(config))(function (language) {
+                  return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("forever")(language))(Foreign.readString))(function (forever) {
+                      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("instantly")(language))(Foreign.readString))(function (instantly) {
                           return Control_Applicative.pure(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))({
                               namedNumbers: namedNumbers,
                               calcs: calcs,
@@ -2368,12 +2368,12 @@ var PS = {};
       });
   };
   var readPeriods = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("time")(config))(Foreign_Index.readProp("periods")))(readNonEmptyList))(function (periods) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("language")(config))(Foreign_Index.readProp("periods")))(readNonEmptyList))(function (periods) {
           return Data_Traversable.sequence(Data_List_Types.traversableNonEmptyList)(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))(Data_Functor.map(Data_List_Types.functorNonEmptyList)(readPeriod)(periods));
       });
   };
   var readTop = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("checks")(config))(Foreign_Index.readProp("dictionary")))(readNonEmptyList))(function (top) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("checks")(config))(Foreign_Index.readProp("common")))(readNonEmptyList))(function (top) {
           return Data_Traversable.sequence(Data_List_Types.traversableNonEmptyList)(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))(Data_Functor.map(Data_List_Types.functorNonEmptyList)(Foreign.readString)(top));
       });
   };
@@ -2388,7 +2388,7 @@ var PS = {};
       });
   };
   var readNamedNumbers = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("time")(config))(Foreign_Index.readProp("namedNumbers")))(readNonEmptyList))(function (namedNumbers) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("language")(config))(Foreign_Index.readProp("numbers")))(readNonEmptyList))(function (namedNumbers) {
           return Data_Traversable.sequence(Data_List_Types.traversableNonEmptyList)(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))(Data_Functor.map(Data_List_Types.functorNonEmptyList)(readNamedNumber)(namedNumbers));
       });
   };
@@ -2444,7 +2444,7 @@ var PS = {};
       });
   };
   var readChecks = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("checks")(config))(Foreign_Index.readProp("messages")))(readNonEmptyList))(function (checks) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("language")(config))(Foreign_Index.readProp("checks")))(readNonEmptyList))(function (checks) {
           return Data_Traversable.sequence(Data_List_Types.traversableNonEmptyList)(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))(Data_Functor.map(Data_List_Types.functorNonEmptyList)(readCheck)(checks));
       });
   };
@@ -2462,7 +2462,7 @@ var PS = {};
       });
   };
   var readCharacterSets = function (config) {
-      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("calculation")(config))(Foreign_Index.readProp("characterSets")))(readNonEmptyList))(function (characterSets) {
+      return Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Control_Bind.bind(Control_Monad_Except_Trans.bindExceptT(Data_Identity.monadIdentity))(Foreign_Index.readProp("checks")(config))(Foreign_Index.readProp("characterSets")))(readNonEmptyList))(function (characterSets) {
           return Data_Traversable.sequence(Data_List_Types.traversableNonEmptyList)(Control_Monad_Except_Trans.applicativeExceptT(Data_Identity.monadIdentity))(Data_Functor.map(Data_List_Types.functorNonEmptyList)(readCharacterSet)(characterSets));
       });
   };
@@ -2509,7 +2509,7 @@ var PS = {};
       if (v instanceof Data_Either.Right) {
           return v.value0;
       };
-      throw new Error("Failed pattern match at Config.Parser (line 142, column 16 - line 144, column 21): " + [ v.constructor.name ]);
+      throw new Error("Failed pattern match at Config.Parser (line 141, column 16 - line 143, column 21): " + [ v.constructor.name ]);
   };
   exports["parse"] = parse;
 })(PS);

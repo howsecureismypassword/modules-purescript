@@ -1,20 +1,10 @@
 exports.configF = {
-    calculation: {
-        calcs: 40e9,
-        characterSets: require("../../dictionaries/en-gb/character-sets"),
-    },
-    time: {
-        periods: require("../../dictionaries/en-gb/periods"),
-        namedNumbers: require("../../dictionaries/en-gb/named-numbers"),
-        forever: "Forever",
-        instantly: "Instantly",
-    },
-    output: {
-        namedNumbers: true,
-    },
+    calculationsPerSecond: 40e9,
+    namedNumbers: true,
+    language: require("../../language/english"),
     checks: {
-        dictionary: require("../../dictionaries/en-gb/top10k"),
-        patterns: require("../../dictionaries/en-gb/patterns"),
-        messages: require("../../dictionaries/en-gb/checks"),
-    },
+        characterSets: require("../../data/character-sets"),
+        common: require("../../data/common/top10k"),
+        patterns: require("../../data/patterns")
+    }
 };

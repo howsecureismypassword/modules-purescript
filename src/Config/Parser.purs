@@ -43,7 +43,6 @@ readLevel f = do
          "achievement" -> pure Achievement
          _ -> fail $ ForeignError "Invalid level"
 
-
 readPattern :: Foreign -> F Pattern
 readPattern ps = do
     level <- "level" `readProp` ps >>= readLevel
@@ -80,22 +79,22 @@ readCharacterSet cs = do
 
 readNamedNumbers :: Foreign -> F (NonEmptyList NamedNumber)
 readNamedNumbers config = do
-    namedNumbers <- "time" `readProp` config >>= readProp "namedNumbers" >>= readNonEmptyList
+    namedNumbers <- "language" `readProp` config >>= readProp "numbers" >>= readNonEmptyList
     sequence $ readNamedNumber <$> namedNumbers
 
 readPeriods :: Foreign -> F (NonEmptyList Period)
 readPeriods config = do
-    periods <- "time" `readProp` config >>= readProp "periods" >>= readNonEmptyList
+    periods <- "language" `readProp` config >>= readProp "periods" >>= readNonEmptyList
     sequence $ readPeriod <$> periods
 
 readCharacterSets :: Foreign -> F (NonEmptyList CharacterSet)
 readCharacterSets config = do
-    characterSets <- "calculation" `readProp` config >>= readProp "characterSets" >>= readNonEmptyList
+    characterSets <- "checks" `readProp` config >>= readProp "characterSets" >>= readNonEmptyList
     sequence $ readCharacterSet <$> characterSets
 
 readTop :: Foreign -> F (NonEmptyList String)
 readTop config = do
-    top <- "checks" `readProp` config >>= readProp "dictionary" >>= readNonEmptyList
+    top <- "checks" `readProp` config >>= readProp "common" >>= readNonEmptyList
     sequence $ (readString <$> top)
 
 readPatterns :: Foreign -> F (NonEmptyList Pattern)
@@ -105,7 +104,7 @@ readPatterns config = do
 
 readChecks :: Foreign -> F (NonEmptyList Check)
 readChecks config = do
-    checks <- "checks" `readProp` config >>= readProp "messages" >>= readNonEmptyList
+    checks <- "language" `readProp` config >>= readProp "checks" >>= readNonEmptyList
     sequence $ readCheck <$> checks
 
 -- config
@@ -121,11 +120,11 @@ readDictionaries config = do
 
 readSettings :: Foreign -> F Settings
 readSettings config = do
-    calcs <- "calculation" `readProp` config >>= readProp "calcs" >>= readNumber
-    time <- "time" `readProp` config
-    forever <- "forever" `readProp` time >>= readString
-    instantly <- "instantly" `readProp` time >>= readString
-    namedNumbers <- "output" `readProp` config >>= readProp "namedNumbers" >>= readBoolean
+    calcs <- "calculationsPerSecond" `readProp` config >>= readNumber
+    namedNumbers <- "namedNumbers" `readProp` config >>= readBoolean
+    language <- "language" `readProp` config
+    forever <- "forever" `readProp` language >>= readString
+    instantly <- "instantly" `readProp` language >>= readString
     pure { namedNumbers, calcs, forever, instantly }
 
 readConfig :: Foreign -> F Config
