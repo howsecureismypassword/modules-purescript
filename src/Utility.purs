@@ -1,6 +1,6 @@
 module Utility (
     findLast
-  , format
+  , formatNumber
   , roundTo
 ) where
 
@@ -23,8 +23,8 @@ findLast fn list = fromMaybe (head list) last
 formatRegex :: Regex
 formatRegex = unsafeRegex "(\\d)(?=(\\d\\d\\d)+(?!\\d))" global
 
-format :: String -> String
-format number = replace formatRegex "$1," number
+formatNumber :: String -> String
+formatNumber number = replace formatRegex "$1," number
 
 -- round to
 roundTo :: Int -> Int -> Int

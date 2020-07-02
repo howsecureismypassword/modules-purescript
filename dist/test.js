@@ -1,6 +1,6 @@
 const setup = require("./build.min");
 
-const hsimp = setup({
+const config = {
     calculation: {
         calcs: 40e9,
         characterSets: require("../dictionaries/en-gb/character-sets"),
@@ -19,7 +19,16 @@ const hsimp = setup({
         patterns: require("../dictionaries/en-gb/patterns"),
         messages: require("../dictionaries/en-gb/checks"),
     },
-});
+};
+
+let hsimp = setup(config);
+
+console.log(hsimp("HowSecureIsMyPassword?"));
+console.log(hsimp("password1"));
+console.log(hsimp("ab14&fj8hdj*"));
+
+config.output.namedNumbers = false;
+hsimp = setup(config);
 
 console.log(hsimp("HowSecureIsMyPassword?"));
 console.log(hsimp("password1"));
