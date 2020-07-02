@@ -3,14 +3,15 @@ module Config.Parser where
 import Prelude ((>>=), (<$>), ($), pure, bind, flip)
 
 import Control.Monad.Except (runExcept)
+import Effect.Exception.Unsafe (unsafeThrow)
+
 import Foreign (F, Foreign, ForeignError(ForeignError), MultipleErrors, fail, renderForeignError, readBoolean, readNumber, readString, readInt, readArray)
 import Foreign.Index (readProp)
 
-import Data.Bifunctor (lmap)
 import Data.Either (Either(Right, Left))
 import Data.List.NonEmpty (NonEmptyList, intercalate, fromFoldable)
 import Data.Maybe (Maybe(Nothing, Just))
-import Data.String.Regex (regex)
+import Data.String.Regex (Regex, regex)
 import Data.String.Regex.Flags (global)
 import Data.Traversable (sequence)
 
@@ -23,15 +24,32 @@ readNonEmptyList f = do
         Nothing -> fail $ ForeignError "Empty array"
         Just nel -> pure nel
 
+readRegex :: Foreign -> F Regex
+readRegex f = do
+    rgx' <- flip regex global <$> readString f
+    case rgx' of
+         Left _ -> fail $ ForeignError "Invalid regex"
+         Right rgx -> pure rgx
+
 -- dictionaries
+readLevel :: Foreign -> F Level
+readLevel f = do
+    level <- readString f
+    case level of
+         "insecure" -> pure Insecure
+         "warning" -> pure Warning
+         "easter-egg" -> pure EasterEgg
+         "notice" -> pure Notice
+         "achievement" -> pure Achievement
+         _ -> fail $ ForeignError "Invalid level"
+
+
 readPattern :: Foreign -> F Pattern
 readPattern ps = do
-    level <- "level" `readProp` ps >>= readString
+    level <- "level" `readProp` ps >>= readLevel
     id <- "id" `readProp` ps >>= readString
-    regex' <- flip regex global <$> ("regex" `readProp` ps >>= readString)
-    case regex' of
-         Left _ -> fail $ ForeignError "Invalid regex"
-         Right regex -> pure { level, id, regex }
+    rgx <- "regex" `readProp` ps >>= readRegex
+    pure { level, id, regex: rgx }
 
 readCheck :: Foreign -> F Check
 readCheck cs = do
@@ -56,11 +74,9 @@ readPeriod ps = do
 readCharacterSet :: Foreign -> F CharacterSet
 readCharacterSet cs = do
     name <- "name" `readProp` cs >>= readString
-    matches' <- flip regex global <$> ("matches" `readProp` cs >>= readString)
+    matches <- "matches" `readProp` cs >>= readRegex
     value <- "value" `readProp` cs >>= readInt
-    case matches' of
-         Left _ -> fail $ ForeignError "Invalid regex"
-         Right matches -> pure { name, matches, value }
+    pure { name, matches, value }
 
 readNamedNumbers :: Foreign -> F (NonEmptyList NamedNumber)
 readNamedNumbers config = do
@@ -122,5 +138,7 @@ readConfig config = do
 errors :: MultipleErrors -> String
 errors errs = intercalate ";" (renderForeignError <$> errs)
 
-parse :: Foreign -> Either String Config
-parse config = errors `lmap` runExcept (readConfig config)
+parse :: Foreign -> Config
+parse config = case runExcept (readConfig config) of
+    Left errs -> unsafeThrow (errors errs)
+    Right cfg -> cfg

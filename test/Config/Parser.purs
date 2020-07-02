@@ -1,19 +1,20 @@
 module Test.Config.Parser where
 
-import Prelude ((<$>), (<<<), Unit, discard)
+import Prelude (Unit, discard)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-import Foreign (Foreign)
 import Data.List.NonEmpty (length)
-import Data.Either (Either(Right), isLeft)
 
-import Config.Parser (parse)
 import Config.Types (Settings)
 
-foreign import config :: Foreign
-foreign import dodgy :: Foreign
+-- tested modules
+import Config.Parser (parse)
 
+-- test data
+import Test.Data (configF)
+
+-- results
 settings :: Settings
 settings = {
         calcs: 40000000000.0
@@ -25,15 +26,12 @@ settings = {
 -- tests
 checks :: Spec Unit
 checks = describe "Parser.Config" do
-    let parsed = parse config
+    let parsed = parse configF
     it "parses config" do
-        ((\p -> p.settings) <$> parsed) `shouldEqual` Right settings
-        (length <<< (\p -> p.dictionaries.characterSets) <$> parsed) `shouldEqual` Right 14
-        (length <<< (\p -> p.dictionaries.periods) <$> parsed) `shouldEqual` Right 15
-        (length <<< (\p -> p.dictionaries.namedNumbers) <$> parsed) `shouldEqual` Right 72
-        (length <<< (\p -> p.dictionaries.top) <$> parsed) `shouldEqual` Right 9999
-        (length <<< (\p -> p.dictionaries.patterns) <$> parsed) `shouldEqual` Right 13
-        (length <<< (\p -> p.dictionaries.checks) <$> parsed) `shouldEqual` Right 14
-
-    it "errors when properties are missing" do
-       isLeft (parse dodgy) `shouldEqual` true
+        parsed.settings `shouldEqual` settings
+        length parsed.dictionaries.characterSets `shouldEqual` 14
+        length parsed.dictionaries.periods `shouldEqual` 15
+        length parsed.dictionaries.namedNumbers `shouldEqual` 72
+        length parsed.dictionaries.top `shouldEqual` 9999
+        length parsed.dictionaries.patterns `shouldEqual` 13
+        length parsed.dictionaries.checks `shouldEqual` 14

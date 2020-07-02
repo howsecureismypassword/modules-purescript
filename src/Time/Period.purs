@@ -1,20 +1,14 @@
-module Period.Internal where
+module Time.Period where
 
 import Prelude ((<$>), (>>=), (||), (/), (<), (==), bind, otherwise)
 import Data.Maybe (Maybe(..))
-import Data.List.NonEmpty (NonEmptyList, last)
+import Data.List.NonEmpty (last)
 import Data.BigInt (BigInt, quot, fromInt, fromNumber, toNumber)
 import Utility (findLast)
 
+import Config.Types (Period, Periods)
+
 foreign import max :: Number
-
-type Period = {
-    singular :: String
-  , plural :: String
-  , seconds :: Number
-}
-
-type Periods = NonEmptyList Period
 
 type Result = {
     value :: BigInt
@@ -44,9 +38,7 @@ smallPeriod time per = result (fromNumber (time / per.seconds)) per
 check :: Number -> Period -> Boolean
 check time per = time < per.seconds
 
-type PeriodCalc = Number -> BigInt -> Maybe Result
-
-period :: Periods -> PeriodCalc
+period :: Periods -> Number -> BigInt -> Maybe Result
 period periods calculationsPerSecond possibilities = do
     let lst = last periods
     calcs <- fromNumber calculationsPerSecond

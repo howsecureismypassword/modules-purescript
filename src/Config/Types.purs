@@ -1,5 +1,6 @@
 module Config.Types where
 
+import Prelude (class Eq, class Ord, class Show)
 import Data.String.Regex (Regex)
 import Data.List.NonEmpty (NonEmptyList)
 
@@ -10,28 +11,49 @@ type CharacterSet = {
   , value :: Int
 }
 
+type CharacterSets = NonEmptyList CharacterSet
+
 type Period = {
     singular :: String
   , plural :: String
   , seconds :: Number
 }
 
+type Periods = NonEmptyList Period
+
 type NamedNumber = {
     name :: String
   , value :: Int
 }
 
+type NamedNumbers = NonEmptyList NamedNumber
+
+data Level = Insecure | Warning | EasterEgg | Notice | Achievement
+derive instance eqLevel :: Eq Level
+derive instance ordLevel :: Ord Level
+
+instance showLevel :: Show Level where
+    show Insecure = "insecure"
+    show Warning = "warning"
+    show EasterEgg = "easter-egg"
+    show Notice = "notice"
+    show Achievement = "achievement"
+
 type Pattern = {
-    level :: String
+    level :: Level
   , id :: String
   , regex :: Regex
 }
+
+type Patterns = NonEmptyList Pattern
 
 type Check = {
     id :: String
   , name :: String
   , message:: String
 }
+
+type Checks = NonEmptyList Check
 
 -- config
 type Settings = {
@@ -42,8 +64,8 @@ type Settings = {
 }
 
 type Dictionaries = {
-    characterSets :: NonEmptyList CharacterSet
-  , periods :: NonEmptyList Period
+    characterSets :: CharacterSets
+  , periods :: Periods
   , namedNumbers :: NonEmptyList NamedNumber
   , top :: NonEmptyList String
   , patterns :: NonEmptyList Pattern
