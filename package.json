@@ -18,5 +18,11 @@
   },
   "dependencies": {
     "big-integer": "^1.6.48"
+  },
+  "scripts": {
+    "postinstall": "spago install",
+    "clean": "rm -rf node_modules output .spago dist/build.* && npm install",
+    "watch": "spago build --watch",
+    "test": "spago test --watch"
   }
 }
