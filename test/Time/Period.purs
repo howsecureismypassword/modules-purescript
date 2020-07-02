@@ -1,35 +1,51 @@
-module Test.Period where
+module Test.Time.Period where
 
-import Prelude (Unit, discard)
+import Prelude (Unit, discard, bind, pure)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Math as Math
-import Data.List.NonEmpty (fromFoldable)
 import Data.Maybe (Maybe(..))
 import Data.BigInt (BigInt, fromInt, fromNumber, pow)
-
-import Test.Helper (unsafeFromMaybe)
+import Data.List.NonEmpty (singleton)
 
 -- tested modules
-import Period.Internal (Period, Result, period)
+import Time.Period (Result, period)
+import Config.Types (Periods)
 
--- dictionaries
-foreign import periods :: Array Period
-foreign import dodgyPeriods :: Array Period
+-- test data
+import Test.Data (config)
+
+yoctoseconds :: Maybe Result
+yoctoseconds = do
+    value <- fromNumber 0.1
+    pure ({ value, name: "yoctoseconds" })
+
+bigYears :: Maybe Result
+bigYears = do
+    value <- fromNumber 3168808781402.0
+    pure ({ value, name: "years" })
+
+dodgyPeriods :: Periods
+dodgyPeriods = singleton ({
+        singular: "blahtosecond",
+        plural: "blahtoseconds",
+        seconds: 0.1
+    })
+
 
 -- helper functions
 period' :: Number -> BigInt -> Maybe Result
-period' = period (unsafeFromMaybe (fromFoldable periods))
+period' = period (config.dictionaries.periods)
 
 dodgyPeriod :: Number -> BigInt -> Maybe Result
-dodgyPeriod = period (unsafeFromMaybe (fromFoldable dodgyPeriods))
+dodgyPeriod = period dodgyPeriods
 
 -- tests
 checks :: Spec Unit
 checks = describe "Period (periods)" do
     it "works out sub-yoctoseconds" do
-        period' (10.0 `Math.pow` 25.0) (fromInt 1) `shouldEqual` Just { value: unsafeFromMaybe (fromNumber 0.1), name: "yoctoseconds" }
+        period' (10.0 `Math.pow` 25.0) (fromInt 1) `shouldEqual` yoctoseconds
 
     it "works out sub-seconds" do
         period' (10.0 `Math.pow` 24.0) (fromInt 1) `shouldEqual` Just { value: fromInt 1, name: "yoctosecond" }
@@ -53,14 +69,14 @@ checks = describe "Period (periods)" do
     it "works out years" do
         period' 1.0 (fromInt 31557600) `shouldEqual` Just { value: fromInt 1, name: "year" }
         period' 1.0 (fromInt 63115200) `shouldEqual` Just { value: fromInt 2, name: "years" }
-        period' 1.0 (fromInt 10 `pow` fromInt 20) `shouldEqual` Just { value: unsafeFromMaybe (fromNumber 3168808781402.0), name: "years" }
+        period' 1.0 (fromInt 10 `pow` fromInt 20) `shouldEqual` bigYears
         period' 1.0 (fromInt 31557600 `pow` fromInt 20) `shouldEqual` Just { value: (fromInt 31557600 `pow` fromInt 19), name: "years" }
         period' 1.0 (fromInt 31557600 `pow` fromInt 200) `shouldEqual` Just { value: (fromInt 31557600 `pow` fromInt 199), name: "years" }
 
     it "works out years with fractional calculation times" do
         period' 0.5 (fromInt 31557600) `shouldEqual` Just { value: fromInt 2, name: "years" }
         period' 0.1 (fromInt 31557600) `shouldEqual` Just { value: fromInt 10, name: "years" }
-        period' 0.1 (fromInt 10 `pow` fromInt 19) `shouldEqual` Just { value: unsafeFromMaybe (fromNumber 3168808781402.0), name: "years" }
+        period' 0.1 (fromInt 10 `pow` fromInt 19) `shouldEqual` bigYears
 
     it "handles Infinity" do
         period' 0.1 (fromInt 10 `pow` fromInt 1000) `shouldEqual` Nothing

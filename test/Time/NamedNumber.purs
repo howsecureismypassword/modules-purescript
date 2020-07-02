@@ -1,23 +1,19 @@
-module Test.NamedNumber where
+module Test.Time.NamedNumber where
 
 import Prelude (Unit, discard)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
 import Data.BigInt (BigInt, fromInt, pow)
-import Data.List.NonEmpty (fromFoldable)
-
-import Test.Helper (unsafeFromMaybe)
 
 -- tested modules
-import NamedNumber.Internal (NamedNumber, namedNumber)
+import Time.NamedNumber (namedNumber)
 
--- dictionaries
-foreign import namedNumbers :: Array NamedNumber
+-- test data
+import Test.Data (config)
 
--- helper functions
 namedNumber' :: BigInt -> String
-namedNumber' = namedNumber (unsafeFromMaybe (fromFoldable namedNumbers))
+namedNumber' = namedNumber (config.dictionaries.namedNumbers)
 
 -- tests
 checks :: Spec Unit
